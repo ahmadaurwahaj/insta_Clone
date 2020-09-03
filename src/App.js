@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
-function App() {
-  const [media, setMedia] = useState({});
-  const access_token =
-    "IGQVJYRlpWemRfclRZAbjV1UmZAXZAnZA4YnlJblJBVXhRMjhkenV6MTNsSXkxUE01dllpeWI3cmJOSWxOMHRZAZAk1raGcyUHdZAeG94dS11WmlVYWg3M3F2UkNlZA1hQMGluUXY1c3hSOUFINTlXTExZAOUE4aQZDZD";
+export default function App() {
+  const [following, setFollowing] = useState({});
 
   useEffect(() => {
-    console.log("making request");
+    console.log("Error");
     axios
-      .get(`https://api.instagram.com/v1/users/wahaj_choudhry`)
+      .get("https://api.instagram.com/v1/users/wahaj_choudhry/followed-by")
       .then(res => {
         console.log(res);
       })
@@ -20,22 +17,8 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello CodeSandbox</h1>
+      <h2>Start editing to see some magic happen!</h2>
     </div>
   );
 }
-
-export default App;
