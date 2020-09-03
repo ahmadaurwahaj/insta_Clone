@@ -10,10 +10,10 @@ function App() {
   useEffect(() => {
     axios
       .get(
-        `https://api.instagram.com/v1/self/media/recent?access_token=${access_token}`
+        ` https://api.instagram.com/v1/users/wahaj_choudhry?access_token=${access_token}`
       )
       .then(res => {
-        console.log(res);
+        console.log("success");
       })
       .catch(error => {
         console.log("Error loading data");
