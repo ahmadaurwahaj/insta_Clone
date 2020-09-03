@@ -8,10 +8,11 @@ function App() {
     "IGQVJYRlpWemRfclRZAbjV1UmZAXZAnZA4YnlJblJBVXhRMjhkenV6MTNsSXkxUE01dllpeWI3cmJOSWxOMHRZAZAk1raGcyUHdZAeG94dS11WmlVYWg3M3F2UkNlZA1hQMGluUXY1c3hSOUFINTlXTExZAOUE4aQZDZD";
 
   useEffect(() => {
+    console.log("making request");
     axios
-      .get(` https://api.instagram.com/v1/users/wahaj_choudhry`)
+      .get(`https://api.instagram.com/v1/users/wahaj_choudhry`)
       .then(res => {
-        console.log("success");
+        console.log(res);
       })
       .catch(error => {
         console.log("Error loading data");
