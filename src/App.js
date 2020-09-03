@@ -9,9 +9,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(
-        ` https://api.instagram.com/v1/users/wahaj_choudhry?access_token=${access_token}`
-      )
+      .get(` https://api.instagram.com/v1/users/wahaj_choudhry`)
       .then(res => {
         console.log("success");
       })
