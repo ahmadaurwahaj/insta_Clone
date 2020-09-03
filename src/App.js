@@ -9,7 +9,7 @@ export default function App() {
   useEffect(() => {
     axios
       .get(
-        `https://api.instagram.com/v1/users/wahaj_choudhry/?access_token${access_Token}`
+        `https://api.instagram.com/v1/users/wahaj_choudhry?access_token${access_Token}`
       )
       .then(res => {
         setData(res.data);
