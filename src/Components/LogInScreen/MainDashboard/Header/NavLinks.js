@@ -7,13 +7,19 @@ import { FiSettings as Settings } from "react-icons/fi";
 import HomeIcon from "./../../../../static/img/home.png";
 // import Message from "./../../../../static/img/email.png";
 // import Explore from "./../../../../static/img/explore.png";
-
+import { logoutUser } from "../../../../Redux/Actions/auth";
+import { useDispatch } from "react-redux";
 import Heart from "./../../../../static/img/heart.png";
 import HeartFill from "./../../../../static/img/heartFill.png";
 function NavLinks() {
+  const dispatch = useDispatch();
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
   return (
     <ul className={style.listWrapper}>
       <li className={style.singleItem}>
@@ -70,7 +76,10 @@ function NavLinks() {
                 </li>
               </Link>
               <Link to="/" className={`${style.linkDropDown} ${style.logOut}`}>
-                <li className={`${style.profileDropDownli} ${style.logOut}`}>
+                <li
+                  className={`${style.profileDropDownli} ${style.logOut}`}
+                  onClick={handleLogout}
+                >
                   Logout
                 </li>
               </Link>

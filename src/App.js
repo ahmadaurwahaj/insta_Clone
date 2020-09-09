@@ -1,31 +1,30 @@
 import React from "react";
-import "./App.css";
-import SignIn from "./Components/LogOutScreen/SignIn/SignIn";
-import SignUp from "./Components/LogOutScreen/SignUp/Signup";
+import { Route, Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import ProtectedRoute from "./Components/ProtectedRoute";
 import Home from "./Components/LogInScreen/MainDashboard/HomeDefaultDisplay";
-import Profile from "./Components/LogInScreen/Profile/Profile";
-import Settings from "./Components/LogInScreen/Settings/Settings";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-export default function App() {
+import Login from "./Components/LogOutScreen/SignIn/SignIn";
+import "./App.css";
+function App(props) {
+  const { isAuthenticated, isVerifying } = props;
   return (
-    <div className="App">
-      <Router>
-        <Switch>
-          <SignIn path="/" exact />
-          <Route path="/signup" exact>
-            <SignUp />
-          </Route>
-          <Route path="/home" exact>
-            <Home />
-          </Route>
-          <Route path="/profile">
-            <Profile />
-          </Route>
-          <Route path="/settings">
-            <Settings />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    <Switch>
+      <ProtectedRoute
+        exact
+        path="/"
+        component={Home}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+      />
+      <Route path="/login" component={Login} />
+    </Switch>
   );
 }
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    isVerifying: state.auth.isVerifying,
+  };
+}
+
+export default connect(mapStateToProps, null)(App);
