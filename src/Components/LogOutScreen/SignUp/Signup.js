@@ -19,7 +19,7 @@ function SignUp() {
       <div className={style.signInInnerWrapper}>
         <div className={style.logInForm}>
           <div className={style.logoTextDiv}>
-            <img className={style.logoText} src={img} />
+            <img alt="" className={style.logoText} src={img} />
           </div>
           <h2 className={style.subHeading}>
             Sign up to see photos and videos from your friends.

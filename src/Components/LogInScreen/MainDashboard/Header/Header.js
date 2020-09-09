@@ -8,7 +8,7 @@ function Header() {
     <div className={style.headerMainWrapper}>
       <div className={style.headerInnerWrapper}>
         <div className={style.imgDiv}>
-          <img src={logo} className={style.logoImg} />
+          <img alt="logo" src={logo} className={style.logoImg} />
         </div>
         <div className={style.searchDiv}>
           <Search />

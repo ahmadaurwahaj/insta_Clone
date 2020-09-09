@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import style from "./Header.module.css";
 import { Link } from "react-router-dom";
-import { AiFillHome as Home } from "react-icons/ai";
-import {
-  BiMessageSquare as Message,
-  BiUserCircle as Profile,
-} from "react-icons/bi";
-import {
-  FaWpexplorer as Explorer,
-  FaRegBookmark as Save,
-} from "react-icons/fa";
-import { BsHeart as Heart } from "react-icons/bs";
+import { BiUserCircle as Profile } from "react-icons/bi";
+import { FaRegBookmark as Save } from "react-icons/fa";
 import { FiSettings as Settings } from "react-icons/fi";
+import HomeIcon from "./../../../../static/img/home.png";
+// import Message from "./../../../../static/img/email.png";
+// import Explore from "./../../../../static/img/explore.png";
+
+import Heart from "./../../../../static/img/heart.png";
+import HeartFill from "./../../../../static/img/heartFill.png";
 function NavLinks() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -19,33 +17,35 @@ function NavLinks() {
   return (
     <ul className={style.listWrapper}>
       <li className={style.singleItem}>
-        <Link to="/">
-          <Home className={style.icon} />
+        <Link to="/home">
+          <img alt="" src={HomeIcon} className={style.icon}></img>
         </Link>
       </li>
-      <li className={style.singleItem}>
+      {/* <li className={style.singleItem}>
         <Link to="/inbox">
-          <Message className={style.icon} />
+          <img src={Message} className={style.icon}></img>
         </Link>
       </li>
       <li className={style.singleItem}>
         <Link to="/explore">
-          <Explorer className={style.icon} />
+          <img src={Explore} className={style.icon}></img>
         </Link>
-      </li>
+      </li> */}
       <li className={style.singleItem}>
-        <span>
-          <Heart
-            className={style.icon}
-            onClick={e => setShowNotifications(!showNotifications)}
-          />
+        <span onClick={e => setShowNotifications(!showNotifications)}>
+          {showNotifications ? (
+            <img alt="" src={HeartFill} className={style.icon}></img>
+          ) : (
+            <img alt="" src={Heart} className={style.icon}></img>
+          )}
         </span>
       </li>
       <li className={style.singleItem}>
-        <span>
-          <Profile
+        <span onClick={e => setShowProfile(!showProfile)}>
+          <img
+            alt=""
+            src="https://instagram.flhe3-1.fna.fbcdn.net/v/t51.2885-19/s320x320/82906858_791653004647399_1879646176001654784_n.jpg?_nc_ht=instagram.flhe3-1.fna.fbcdn.net&_nc_ohc=SmNH9bvVA9YAX-RS6QI&oh=35d7846a807075da92e4193652c68e12&oe=5F80D88A"
             className={`${style.icon} ${style.lastIcon}`}
-            onClick={e => setShowProfile(!showProfile)}
           />
         </span>
         {showProfile && (
@@ -57,7 +57,7 @@ function NavLinks() {
                   <span className={style.profileDropDownText}>Profile</span>
                 </li>
               </Link>
-              <Link to="/" className={style.linkDropDown}>
+              <Link to="/profile" className={style.linkDropDown}>
                 <li className={style.profileDropDownli}>
                   <Save className={style.dropDownIcon} />
                   <span className={style.profileDropDownText}>Saved</span>

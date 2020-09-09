@@ -1,5 +1,6 @@
 import React from "react";
 import style from "./Posts.module.css";
+
 import {
   BsBookmark as Bookmark,
   BsHeart as Heart,
@@ -13,6 +14,7 @@ function Posts({ type = "video" }) {
       <div className={style.postWrapper}>
         <div className={style.postHeader}>
           <img
+            alt=""
             src="https://instagram.flhe3-1.fna.fbcdn.net/v/t51.2885-19/s150x150/82504203_184828082887532_557036608088440832_n.jpg?_nc_ht=instagram.flhe3-1.fna.fbcdn.net&_nc_ohc=QoF9-oEmtHwAX9a6iam&oh=794176c42d1beb01a132e6e281679ebe&oe=5F7DFA15"
             className={style.authorImg}
           />
@@ -24,11 +26,12 @@ function Posts({ type = "video" }) {
         <div className={style.mediaItem}>
           {type === "video" ? (
             <img
+              alt=""
               src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
               className={style.mediaData}
             />
           ) : (
-            <video width="320" height="240" controls>
+            <video alt="" width="320" height="240" controls>
               <source src="" type="video/mp4" />
               <source src="" type="video/ogg" />
             </video>

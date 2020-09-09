@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header/Header";
-import Posts from "./Posts/Posts";
+import Posts from "./NewsFeed/Posts";
 function HomeDefaultDisplay() {
   return (
     <div>

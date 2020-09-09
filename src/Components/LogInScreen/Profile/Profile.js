@@ -1,47 +1,48 @@
 import React from "react";
 import style from "./Profile.module.css";
-import { Route, Link, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import PostsBox from "./PostsBox";
+import NavLinks from "./ProfileMediaHeader";
 function Profile() {
   return (
     <div className={style.mainWrapper}>
       <div className={style.profileWrapper}>
         <div className={style.innerProfileContainer}>
           <div className={style.imageDiv}>
-            <img src="" />
+            <img src="" className={style.profileImg} alt="" />
           </div>
           <div className={style.detailsDiv}>
-            <h1 className={style.userName}>username</h1>
-            <button className={style.editProfile}>Edit Profile</button>
-          </div>
-          <div className={style.followDetails}>
-            <h1>
-              <strong>?</strong> Posts
-            </h1>
-            <h1>
-              <strong>?</strong> Followers
-            </h1>
-            <h1>
-              <strong>?</strong> following
-            </h1>
-          </div>
-          <div className={style.nameBioContainer}>
-            <h1>Name of User</h1>
-            <h4>Bio</h4>
+            <div className={style.nameEdit}>
+              <h1 className={style.userName}>username</h1>
+              <button className={style.editProfile}>Edit Profile</button>
+            </div>
+            <div className={style.followDetails}>
+              <h1>
+                <strong>?</strong> posts
+              </h1>
+              <h1>
+                <strong>?</strong> followers
+              </h1>
+              <h1>
+                <strong>?</strong> following
+              </h1>
+            </div>
+            <div className={style.nameBioContainer}>
+              <h1>Name of User</h1>
+              <h4>Bio</h4>
+            </div>
           </div>
         </div>
       </div>
       <div className={style.mediaDisplayDiv}>
-        <div className={style.header}>
-          <Link to="/profile/">POSTS</Link>
-          <Link to="/profile/saved">SAVED</Link>
-        </div>
+        <NavLinks />
         <div className={style.mediaMain}>
           <Switch>
             <Route path="/profile/" exact>
-              PROFILE
+              <PostsBox />
             </Route>
             <Route path="/profile/saved/" exact>
-              <h1>Hello</h1>
+              <PostsBox />
             </Route>
           </Switch>
         </div>

@@ -17,7 +17,7 @@ function SignIn() {
       <div className={style.signInInnerWrapper}>
         <div className={style.logInForm}>
           <div className={style.logoTextDiv}>
-            <img className={style.logoText} src={img} />
+            <img alt="" className={style.logoText} src={img} />
           </div>
           <form className={style.loginForm}>
             <input

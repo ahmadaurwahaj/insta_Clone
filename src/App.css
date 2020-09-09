@@ -12,16 +12,19 @@
   --box-bg-color: #fff;
   --box-border-color: rgb(219, 219, 219);
   --primary-blue-color: #0095f6;
+  --primary-black-color: #262626;
 }
 body {
   background: var(--bg-color);
   width: 100vw;
   /* overflow: hidden; */
+  color: var(--primary-black-color);
 }
 
 a,
 button {
   cursor: pointer;
+  padding: 0;
 }
 textarea {
   padding: 4px 2px;
