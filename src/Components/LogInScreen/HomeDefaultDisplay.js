@@ -1,10 +1,10 @@
 import React from "react";
 import Header from "./Header/Header";
-import Posts from "./NewsFeed/Posts";
-function HomeDefaultDisplay() {
+import Posts from "./MainDashboard/NewsFeed/Posts";
+function HomeDefaultDisplay({ user }) {
   return (
     <div>
-      <Header />
+      <Header user={user} />
       <Posts />
     </div>
   );

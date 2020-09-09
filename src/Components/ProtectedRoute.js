@@ -13,7 +13,7 @@ const ProtectedRoute = ({
       isVerifying ? (
         <div />
       ) : isAuthenticated ? (
-        <Component {...props} />
+        <Component {...props} {...rest} />
       ) : (
         <Redirect
           to={{

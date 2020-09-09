@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import style from "../../LogOutScreen/LogoutStyle.module.css";
 import { Link } from "react-router-dom";
 import img from "../../../static/img/instaLogo.png";
+import { signupUser } from "../../../Redux/Actions/auth";
+import { useDispatch, useSelector } from "react-redux";
+import loader from "../../../static/img/loader.gif";
+import { Redirect } from "react-router-dom";
 function SignUp() {
+  const dispatch = useDispatch();
+  const signupError = useSelector(state => state.auth.signupError);
+  const isSigningUp = useSelector(state => state.auth.isSigningUp);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
   const initState = {
     email: "",
     fullName: "",
@@ -14,6 +23,14 @@ function SignUp() {
   const handleChange = e => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+  const handleSubmit = e => {
+    const { email, password, fullName, userName } = user;
+    e.preventDefault();
+    dispatch(signupUser(email, password, fullName, userName));
+  };
+  if (isAuthenticated) {
+    return <Redirect to="/"></Redirect>;
+  }
   return (
     <div className={style.signInMainWrapper}>
       <div className={style.signInInnerWrapper}>
@@ -24,10 +41,10 @@ function SignUp() {
           <h2 className={style.subHeading}>
             Sign up to see photos and videos from your friends.
           </h2>
-          <form className={style.loginForm}>
+          <form className={style.loginForm} onSubmit={handleSubmit}>
             <input
               className={style.input}
-              id=""
+              id="email"
               type="text"
               name="email"
               value={user.email}
@@ -37,7 +54,7 @@ function SignUp() {
             />
             <input
               className={style.input}
-              id=""
+              id="full_name"
               type="text"
               name="fullName"
               value={user.fullName}
@@ -47,10 +64,10 @@ function SignUp() {
             />
             <input
               className={style.input}
-              id=""
+              id="user_name"
               type="text"
-              name="name"
-              value={user.name}
+              name="userName"
+              value={user.userName}
               onChange={handleChange}
               placeholder="Username"
               required
@@ -59,7 +76,7 @@ function SignUp() {
             <input
               className={style.input}
               type="password"
-              id=""
+              id="password"
               name="password"
               value={user.password}
               onChange={handleChange}
@@ -68,7 +85,20 @@ function SignUp() {
             />
             <button type="submit" className={style.btn}>
               Sign Up
+              {isSigningUp && (
+                <img
+                  src={loader}
+                  className={style.loaderStyle}
+                  alt=""
+                  width="16"
+                  height="16"
+                />
+              )}
             </button>
+
+            {signupError !== "" && (
+              <p className={style.errorMsg}>{signupError}</p>
+            )}
           </form>
         </div>
         <div className={style.signUpDiv}>

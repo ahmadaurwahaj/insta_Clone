@@ -8,6 +8,10 @@ export const LOGOUT_REQUEST = "LOGOUT_REQUEST";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const LOGOUT_FAILURE = "LOGOUT_FAILURE";
 
+export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
+export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
+export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
+
 export const VERIFY_REQUEST = "VERIFY_REQUEST";
 export const VERIFY_SUCCESS = "VERIFY_SUCCESS";
 
@@ -49,6 +53,26 @@ const logoutError = () => {
   };
 };
 
+const requestSignup = () => {
+  return {
+    type: SIGNUP_REQUEST,
+  };
+};
+
+const receiveSignup = user => {
+  return {
+    type: SIGNUP_SUCCESS,
+    user,
+  };
+};
+
+const signupError = errorMsg => {
+  return {
+    type: SIGNUP_FAILURE,
+    errorMsg,
+  };
+};
+
 const verifyRequest = () => {
   return {
     type: VERIFY_REQUEST,
@@ -70,8 +94,6 @@ export const loginUser = (email, password) => dispatch => {
       dispatch(receiveLogin(user));
     })
     .catch(error => {
-      alert(error);
-      //Do something with the error if you want!
       dispatch(loginError());
     });
 };
@@ -87,6 +109,24 @@ export const logoutUser = () => dispatch => {
     .catch(error => {
       alert(error);
       dispatch(logoutError());
+    });
+};
+export const signupUser = (email, password, fullName, userName) => dispatch => {
+  dispatch(requestSignup());
+  myFirebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(user => {
+      dispatch(receiveSignup(user));
+      const newUser = myFirebase.auth().currentUser;
+      newUser.updateProfile({
+        fullName,
+        userName,
+      });
+    })
+    .catch(error => {
+      dispatch(signupError(error.message));
+      console.log(error.message);
     });
 };
 

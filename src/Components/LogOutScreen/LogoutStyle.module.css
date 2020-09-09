@@ -6,6 +6,12 @@
   align-items: center;
   min-height: 100vh;
 }
+.errorMsg {
+  font-size: 13px;
+  font-weight: 600;
+  color: red;
+  padding: 4px 0px;
+}
 
 .subHeading {
   color: #8e8e8e;

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { loginUser } from "../../../Redux/Actions/auth";
 import { useDispatch } from "react-redux";
+import loader from "../../../static/img/loader.gif";
 function SignIn({ isAuthenticated, loginError, isLoggingIn }) {
   const dispatch = useDispatch();
   const initState = {
@@ -56,8 +57,22 @@ function SignIn({ isAuthenticated, loginError, isLoggingIn }) {
                 required
               />
               <button type="submit" className={style.btn}>
-                Log In
+                Log In{" "}
+                {isLoggingIn && (
+                  <img
+                    src={loader}
+                    className={style.loaderStyle}
+                    alt=""
+                    width="16"
+                    height="16"
+                  />
+                )}
               </button>
+              {loginError && (
+                <>
+                  <p className={style.errorMsg}>Invalid Email or Password.</p>
+                </>
+              )}
             </form>
           </div>
           <div className={style.signUpDiv}>

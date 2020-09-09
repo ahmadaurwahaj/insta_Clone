@@ -4,16 +4,15 @@ import { Link } from "react-router-dom";
 import { BiUserCircle as Profile } from "react-icons/bi";
 import { FaRegBookmark as Save } from "react-icons/fa";
 import { FiSettings as Settings } from "react-icons/fi";
-import HomeIcon from "./../../../../static/img/home.png";
+import HomeIcon from "./../../../static/img/home.png";
 // import Message from "./../../../../static/img/email.png";
 // import Explore from "./../../../../static/img/explore.png";
-import { logoutUser } from "../../../../Redux/Actions/auth";
+import { logoutUser } from "../../../Redux/Actions/auth";
 import { useDispatch } from "react-redux";
-import Heart from "./../../../../static/img/heart.png";
-import HeartFill from "./../../../../static/img/heartFill.png";
-function NavLinks() {
+import Heart from "./../../../static/img/heart.png";
+import HeartFill from "./../../../static/img/heartFill.png";
+function NavLinks({ user }) {
   const dispatch = useDispatch();
-
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
@@ -23,7 +22,7 @@ function NavLinks() {
   return (
     <ul className={style.listWrapper}>
       <li className={style.singleItem}>
-        <Link to="/home">
+        <Link to="/">
           <img alt="" src={HomeIcon} className={style.icon}></img>
         </Link>
       </li>
@@ -57,19 +56,22 @@ function NavLinks() {
         {showProfile && (
           <div className={style.profileDropDown}>
             <ul className={style.profileDropDownMenu}>
-              <Link to="/" className={style.linkDropDown}>
+              <Link to={`/profile/${user.uid}`} className={style.linkDropDown}>
                 <li className={style.profileDropDownli}>
                   <Profile className={style.dropDownIcon} />
                   <span className={style.profileDropDownText}>Profile</span>
                 </li>
               </Link>
-              <Link to="/profile" className={style.linkDropDown}>
+              <Link
+                to={`/profile/${user.uid}/saved`}
+                className={style.linkDropDown}
+              >
                 <li className={style.profileDropDownli}>
                   <Save className={style.dropDownIcon} />
                   <span className={style.profileDropDownText}>Saved</span>
                 </li>
               </Link>
-              <Link to="/" className={style.linkDropDown}>
+              <Link to="/settings" className={style.linkDropDown}>
                 <li className={style.profileDropDownli}>
                   <Settings className={style.dropDownIcon} />
                   <span className={style.profileDropDownText}>Settings</span>
