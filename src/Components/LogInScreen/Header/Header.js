@@ -1,9 +1,12 @@
-import React from "react";
+import React from "react"; // { useState, useEffect }
 import style from "./Header.module.css";
 import NavLinks from "./NavLinks";
 import Search from "./Search";
 import logo from "../../../static/img/instaLogo.png";
-function Header({ user }) {
+import { useSelector } from "react-redux";
+// import { db } from "../../../Firebase/firebase";
+function Header() {
+  const userData = useSelector(state => state.auth.userData);
   return (
     <div className={style.headerMainWrapper}>
       <div className={style.headerInnerWrapper}>
@@ -14,7 +17,7 @@ function Header({ user }) {
           <Search />
         </div>
         <div className={style.navLinks}>
-          <NavLinks user={user} />
+          <NavLinks user={userData} />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import Posts from "./MainDashboard/NewsFeed/Posts";
 function HomeDefaultDisplay({ user }) {
   return (
     <div>
-      <Header user={user} />
+      <Header />
       <Posts />
     </div>
   );

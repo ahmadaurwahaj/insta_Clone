@@ -10,6 +10,9 @@ import {
   SIGNUP_REQUEST,
   SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
+  GET_USER_DATA_REQUEST,
+  SUCESS_GET_USER_DATA,
+  FAILURE_GET_USER_DATA,
 } from "./../Actions/auth";
 
 const userState = {
@@ -21,6 +24,11 @@ const userState = {
   logoutError: false,
   signupError: "",
   isAuthenticated: false,
+  isRetrievingData: false,
+  retrievingError: false,
+  retrieveSuccess: false,
+  docRef: "",
+  userData: {},
   user: {},
 };
 export default (state = userState, action) => {
@@ -34,9 +42,9 @@ export default (state = userState, action) => {
     case LOGIN_SUCCESS:
       return {
         ...state,
+        user: action.user,
         isLoggingIn: false,
         isAuthenticated: true,
-        user: action.user,
       };
     case LOGIN_FAILURE:
       return {
@@ -44,6 +52,31 @@ export default (state = userState, action) => {
         isLoggingIn: false,
         isAuthenticated: false,
         loginError: true,
+      };
+    case GET_USER_DATA_REQUEST:
+      return {
+        ...state,
+        isRetrievingData: true,
+        retrieveSuccess: false,
+        retrievingError: false,
+
+        isAuthenticated: false,
+      };
+    case SUCESS_GET_USER_DATA:
+      return {
+        ...state,
+        userData: action.data.userData,
+        docRef: action.data.docId,
+        isRetrievingData: false,
+        retrieveSuccess: true,
+        retrievingError: false,
+        isAuthenticated: true,
+      };
+    case FAILURE_GET_USER_DATA:
+      return {
+        ...state,
+        isAuthenticated: false,
+        retrievingError: true,
       };
     case SIGNUP_REQUEST:
       return {
@@ -78,6 +111,8 @@ export default (state = userState, action) => {
         isLoggingOut: false,
         isAuthenticated: false,
         user: {},
+        userData: {},
+        docRef: "",
       };
     case LOGOUT_FAILURE:
       return {

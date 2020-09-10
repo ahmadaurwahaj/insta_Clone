@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-
+import Header from "./LogInScreen/Header/Header";
 const ProtectedRoute = ({
   component: Component,
   isAuthenticated,
@@ -13,7 +13,10 @@ const ProtectedRoute = ({
       isVerifying ? (
         <div />
       ) : isAuthenticated ? (
-        <Component {...props} {...rest} />
+        <>
+          <Header></Header>
+          <Component {...props} {...rest} />
+        </>
       ) : (
         <Redirect
           to={{

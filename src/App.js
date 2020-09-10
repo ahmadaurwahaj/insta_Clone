@@ -10,7 +10,8 @@ import Posts from "./Components/LogInScreen/MainDashboard/NewsFeed/Posts";
 import "./App.css";
 import { useSelector } from "react-redux";
 function App(props) {
-  const user = useSelector(state => state.auth.user);
+  // const user = useSelector(state => state.auth.user);
+  const userData = useSelector(state => state.auth.userData);
 
   const { isAuthenticated, isVerifying } = props;
   return (
@@ -22,7 +23,7 @@ function App(props) {
         ChildComponent={Posts}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
-        user={user}
+        user={userData}
       />
       <ProtectedRoute
         exact
@@ -30,7 +31,7 @@ function App(props) {
         component={Settings}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
-        user={user}
+        user={userData}
       />
       <Route path="/login" component={Login} exact />
       <Route path="/signup" component={SignUp} exact />

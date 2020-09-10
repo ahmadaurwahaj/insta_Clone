@@ -1,5 +1,5 @@
 import { myFirebase } from "../../Firebase/firebase";
-
+import { db } from "../../Firebase/firebase";
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
@@ -12,9 +12,30 @@ export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
 
+export const GET_USER_DATA_REQUEST = "SET_USER_DATA";
+export const SUCESS_GET_USER_DATA = "SUCESS_SET_USER_DATA";
+export const FAILURE_GET_USER_DATA = "FAILURE_SET_USER_DATA";
+
 export const VERIFY_REQUEST = "VERIFY_REQUEST";
 export const VERIFY_SUCCESS = "VERIFY_SUCCESS";
 
+const retrievedUserData = data => {
+  return {
+    type: SUCESS_GET_USER_DATA,
+    data,
+  };
+};
+const retrievingDataError = () => {
+  return {
+    type: FAILURE_GET_USER_DATA,
+  };
+};
+
+const getUserData = () => {
+  return {
+    type: GET_USER_DATA_REQUEST,
+  };
+};
 const requestLogin = () => {
   return {
     type: LOGIN_REQUEST,
@@ -91,6 +112,7 @@ export const loginUser = (email, password) => dispatch => {
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(user => {
+      dispatch(getCurrentUserData(user));
       dispatch(receiveLogin(user));
     })
     .catch(error => {
@@ -113,23 +135,58 @@ export const logoutUser = () => dispatch => {
 };
 export const signupUser = (email, password, fullName, userName) => dispatch => {
   dispatch(requestSignup());
-  myFirebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then(user => {
-      dispatch(receiveSignup(user));
-      const newUser = myFirebase.auth().currentUser;
-      newUser.updateProfile({
-        fullName,
-        userName,
-      });
-    })
-    .catch(error => {
-      dispatch(signupError(error.message));
-      console.log(error.message);
+  db.collection("users")
+    .where("personalData.userName", "==", userName)
+    .get()
+    .then(snapshot => {
+      if (snapshot.docs.length === 0) {
+        myFirebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .then(user => {
+            dispatch(receiveSignup(user));
+            db.collection("users")
+              .add({
+                personalData: {
+                  uid: user.user.uid,
+                  fullName,
+                  userName,
+                  email: user.user.email,
+                  phoneNumber: "",
+                  website: "",
+                  profilePicUrl: "",
+                  bio: "",
+                },
+              })
+              .catch(err => console.log(err));
+          })
+          .catch(error => {
+            dispatch(signupError(error.message));
+            console.log(error.message);
+          });
+      } else {
+        dispatch(signupError("Username already exists"));
+      }
     });
 };
 
+export const getCurrentUserData = user => dispatch => {
+  dispatch(getUserData());
+  // console.log("From getting data", user.user);
+  db.collection("users")
+    .where("personalData.uid", "==", user.user.uid)
+    .get()
+    .then(snapshot => {
+      // console.log("from getting snapshot", snapshot.docs[0].data());
+      dispatch(
+        retrievedUserData({
+          userData: snapshot.docs[0].data(),
+          docId: snapshot.docs[0].id,
+        })
+      );
+    })
+    .catch(err => dispatch(retrievingDataError()));
+};
 export const verifyAuth = () => dispatch => {
   dispatch(verifyRequest());
   myFirebase.auth().onAuthStateChanged(user => {
