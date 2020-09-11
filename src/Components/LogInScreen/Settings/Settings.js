@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import style from "./Settings.module.css";
 import { db, storage } from "../../../Firebase/firebase";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { myFirebase } from "../../../Firebase/firebase";
 import loadingImg from "../../../static/img/loader.gif";
-import { getCurrentUserData } from "../../../Redux/Actions/auth";
+// import { getCurrentUserData } from "../../../Redux/Actions/auth";
 
 export default function Settings({ user }) {
-  const docRef = useSelector(state => state.auth.docRef);
-  const userRef = useSelector(state => state.auth.user);
+  // const userRef = useSelector(state => state.auth.user);
   const profileData = {
     fullName: user.personalData.fullName,
     userName: user.personalData.userName,
@@ -20,11 +19,13 @@ export default function Settings({ user }) {
     profilePicUrl: user.personalData.profilePicUrl,
   };
 
-  const dispatch = useDispatch();
+  const docRef = useSelector(state => state.auth.docRef);
   const [userData, setuserData] = useState(profileData);
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [shouldUpdate, setShouldUpdate] = useState(false);
+  // const dispatch = useDispatch();
+
   const handleChange = e => {
     setShouldUpdate(true);
     setuserData({ ...userData, [e.target.name]: e.target.value });

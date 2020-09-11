@@ -14,6 +14,8 @@ function App(props) {
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
 
+  const { isAuthenticated, isVerifying } = props;
+  const userData = useSelector(state => state.auth.userData);
   useEffect(() => {
     let unsub;
     if (isAuthenticated) {
@@ -23,8 +25,6 @@ function App(props) {
       unsub();
     };
   }, []);
-  const userData = useSelector(state => state.auth.userData);
-  const { isAuthenticated, isVerifying } = props;
 
   return (
     <Switch>
