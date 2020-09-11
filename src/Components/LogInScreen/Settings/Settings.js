@@ -38,7 +38,7 @@ export default function Settings({ user }) {
 
   const updateProfile = () => {
     setIsUpdating(true);
-    updateData();
+    // updateData();
     updateImg(userData.profilePicUrl);
     // setIsUpdating(true);
     // if (validateUserName(userData)) {
@@ -102,30 +102,31 @@ export default function Settings({ user }) {
   };
 
   const updateImg = profilePicUrl => {
-    if (profilePicUrl !== user.personalData.profilePicUrl) {
-      if (profilePicUrl.type.includes("image")) {
-        const uploadTask = storage
-          .ref(`images/${profilePicUrl.name}`)
-          .put(profilePicUrl);
-        uploadTask.on(
-          "state_changed",
-          snapshot => {},
-          error => {
-            setErrorMsg(error);
-            setIsUpdating(false);
-          },
-          () => {
-            storage
-              .ref("images")
-              .child(profilePicUrl.name)
-              .getDownloadURL()
-              .then(url => {
-                updateData(url);
-                setIsUpdating(false);
-              });
-          }
-        );
-      }
+    if (profilePicUrl === user.personalData.profilePicUrl) {
+      updateData();
+    }
+    if (profilePicUrl.type.includes("image")) {
+      const uploadTask = storage
+        .ref(`images/${profilePicUrl.name}`)
+        .put(profilePicUrl);
+      uploadTask.on(
+        "state_changed",
+        snapshot => {},
+        error => {
+          setErrorMsg(error);
+          setIsUpdating(false);
+        },
+        () => {
+          storage
+            .ref("images")
+            .child(profilePicUrl.name)
+            .getDownloadURL()
+            .then(url => {
+              updateData(url);
+              setIsUpdating(false);
+            });
+        }
+      );
     }
   };
   // function validateUserName(userData) {

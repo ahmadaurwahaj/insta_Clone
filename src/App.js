@@ -9,12 +9,20 @@ import Settings from "./Components/LogInScreen/Settings/Settings";
 import Posts from "./Components/LogInScreen/MainDashboard/NewsFeed/Posts";
 import { useSelector, useDispatch } from "react-redux";
 import "./App.css";
-// import { getCurrentUserData } from "./Redux/Actions/auth";
+import { getCurrentUserData } from "./Redux/Actions/auth";
 function App(props) {
-  // const user = useSelector(state => state.auth.user);
-  // const user = useSelector(state => state.auth.user);
-  // const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    let unsub;
+    if (isAuthenticated) {
+      unsub = dispatch(getCurrentUserData(user));
+    }
+    return () => {
+      unsub();
+    };
+  }, []);
   const userData = useSelector(state => state.auth.userData);
   const { isAuthenticated, isVerifying } = props;
 
