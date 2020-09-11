@@ -12,6 +12,7 @@ import "./App.css";
 import { getCurrentUserData } from "./Redux/Actions/auth";
 function App(props) {
   const user = useSelector(state => state.auth.user);
+  const retrieveSuccess = useSelector(state => state.auth.retrieveSuccess);
   const dispatch = useDispatch();
 
   const { isAuthenticated, isVerifying } = props;
@@ -34,6 +35,7 @@ function App(props) {
         ChildComponent={Posts}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
+        retrieveSuccess={retrieveSuccess}
         user={userData}
       />
       <ProtectedRoute
@@ -43,6 +45,7 @@ function App(props) {
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
         user={userData}
+        retrieveSuccess={retrieveSuccess}
       />
       <Route path="/login" component={Login} exact />
       <Route path="/signup" component={SignUp} exact />

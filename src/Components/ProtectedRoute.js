@@ -1,11 +1,12 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import Header from "./LogInScreen/Header/Header";
-
+import Loader from "./LogInScreen/Loader/Loader";
 const ProtectedRoute = ({
   component: Component,
   isAuthenticated,
   isVerifying,
+  retrieveSuccess,
   ...rest
 }) => (
   <Route
@@ -15,8 +16,14 @@ const ProtectedRoute = ({
         <div />
       ) : isAuthenticated ? (
         <>
-          <Header></Header>
-          <Component {...props} {...rest} />
+          {retrieveSuccess ? (
+            <>
+              <Header></Header>
+              <Component {...props} {...rest} />
+            </>
+          ) : (
+            <Loader />
+          )}
         </>
       ) : (
         <Redirect
