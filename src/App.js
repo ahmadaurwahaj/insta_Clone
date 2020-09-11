@@ -17,14 +17,13 @@ function App(props) {
   const { isAuthenticated, isVerifying } = props;
   const userData = useSelector(state => state.auth.userData);
   useEffect(() => {
-    let unsub;
     if (isAuthenticated) {
-      unsub = dispatch(getCurrentUserData(user));
+      dispatch(getCurrentUserData(user));
     }
-    return () => {
-      unsub();
-    };
-  }, []);
+    // return () => {
+    //   unsub();
+    // };
+  }, [dispatch, isAuthenticated, user]);
 
   return (
     <Switch>

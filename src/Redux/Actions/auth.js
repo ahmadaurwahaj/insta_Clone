@@ -25,7 +25,7 @@ const retrievedUserData = data => {
     data,
   };
 };
-const retrievingDataError = () => {
+export const retrievingDataError = () => {
   return {
     type: FAILURE_GET_USER_DATA,
   };

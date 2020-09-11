@@ -51,7 +51,7 @@ function NavLinks({ user }) {
         <span onClick={e => setShowProfile(!showProfile)}>
           <img
             alt=""
-            src="https://instagram.flhe3-1.fna.fbcdn.net/v/t51.2885-19/s320x320/82906858_791653004647399_1879646176001654784_n.jpg?_nc_ht=instagram.flhe3-1.fna.fbcdn.net&_nc_ohc=SmNH9bvVA9YAX-RS6QI&oh=35d7846a807075da92e4193652c68e12&oe=5F80D88A"
+            src={user.personalData.profilePicUrl}
             className={`${style.icon} ${style.lastIcon}`}
           />
         </span>

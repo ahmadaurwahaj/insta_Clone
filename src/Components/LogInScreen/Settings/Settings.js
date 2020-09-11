@@ -105,8 +105,7 @@ export default function Settings({ user }) {
   const updateImg = profilePicUrl => {
     if (profilePicUrl === user.personalData.profilePicUrl) {
       updateData();
-    }
-    if (profilePicUrl.type.includes("image")) {
+    } else if (profilePicUrl.type.includes("image")) {
       const uploadTask = storage
         .ref(`images/${profilePicUrl.name}`)
         .put(profilePicUrl);
