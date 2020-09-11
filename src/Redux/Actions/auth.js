@@ -175,17 +175,28 @@ export const getCurrentUserData = user => dispatch => {
   // console.log("From getting data", user.user);
   db.collection("users")
     .where("personalData.uid", "==", user.user.uid)
-    .get()
-    .then(snapshot => {
-      // console.log("from getting snapshot", snapshot.docs[0].data());
-      dispatch(
-        retrievedUserData({
-          userData: snapshot.docs[0].data(),
-          docId: snapshot.docs[0].id,
-        })
-      );
-    })
-    .catch(err => dispatch(retrievingDataError()));
+    // .get()
+    // .catch(err => dispatch(retrievingDataError()));
+    .onSnapshot(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        dispatch(
+          retrievedUserData({
+            userData: doc.data(),
+            docId: doc.id,
+          })
+        );
+      });
+    });
+  // .then(snapshot => {
+  //   console.log("from getting snapshot", snapshot.docs[0].data());
+  //   dispatch(
+  //     retrievedUserData({
+  //       userData: snapshot.docs[0].data(),
+  //       docId: snapshot.docs[0].id,
+  //     })
+  //   );
+  // })
+  // .catch(err => dispatch(retrievingDataError()));
 };
 export const verifyAuth = () => dispatch => {
   dispatch(verifyRequest());

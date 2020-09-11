@@ -1,22 +1,147 @@
 import React, { useState } from "react";
 import style from "./Settings.module.css";
+import { db, storage } from "../../../Firebase/firebase";
+import { useSelector } from "react-redux";
+import { myFirebase } from "../../../Firebase/firebase";
+import loadingImg from "../../../static/img/loader.gif";
 
-function Settings({ user }) {
+export default function Settings({ user }) {
+  const docRef = useSelector(state => state.auth.docRef);
   const profileData = {
-    name: "Name",
-    userName: "userName",
-    website: "",
-    bio: "",
-    email: "",
-    phoneNumber: "",
+    fullName: user.personalData.fullName,
+    userName: user.personalData.userName,
+    website: user.personalData.website,
+    bio: user.personalData.bio,
+    email: user.personalData.email,
+    phoneNumber: user.personalData.phoneNumber,
+    uid: user.personalData.uid,
+    profilePicUrl: user.personalData.profilePicUrl,
   };
 
   const [userData, setuserData] = useState(profileData);
-
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [shouldUpdate, setShouldUpdate] = useState(false);
   const handleChange = e => {
+    setShouldUpdate(true);
     setuserData({ ...userData, [e.target.name]: e.target.value });
   };
 
+  const handleImg = e => {
+    setShouldUpdate(true);
+    const image = e.target.files[0];
+    setuserData({ ...userData, [e.target.name]: image });
+  };
+
+  const updateProfile = () => {
+    setIsUpdating(true);
+    updateData();
+    updateImg(userData.profilePicUrl);
+    // setIsUpdating(true);
+    // if (validateUserName(userData)) {
+    //   let userAuth = myFirebase.auth().currentUser;
+    //   userAuth
+    //     .updateEmail(userData.email)
+    //     .then(function () {
+    //       db.collection("users")
+    //         .doc(docRef)
+    //         .update({ personalData: userData })
+    //         .then(res => {
+    //           setErrorMsg("Data Updated Successfully");
+    //           setIsUpdating(false);
+    //           setShouldUpdate(false);
+    //         })
+    //         .catch(err => {
+    //           setErrorMsg("Internal Error");
+    //           setIsUpdating(false);
+    //         });
+    //     })
+    //     .catch(function (error) {
+    //       setErrorMsg("Email already exists.");
+    //       setIsUpdating(false);
+    //     });
+    // } else {
+    //   setErrorMsg("Username already exists.");
+    //   setIsUpdating(false);
+    // }
+  };
+
+  // export const updateData = () => {
+
+  // }
+
+  const updateData = (url = userData.profilePicUrl) => {
+    if (validateUserName(userData)) {
+      let userAuth = myFirebase.auth().currentUser;
+      userAuth
+        .updateEmail(userData.email)
+        .then(function () {
+          db.collection("users")
+            .doc(docRef)
+            .update({
+              personalData: { ...userData, profilePicUrl: url },
+            })
+            .then(res => {
+              setErrorMsg("Data Updated Successfully");
+              setIsUpdating(false);
+              setShouldUpdate(false);
+            })
+            .catch(err => {
+              setErrorMsg("Internal Error");
+              setIsUpdating(false);
+            });
+        })
+        .catch(function (error) {
+          setErrorMsg("Email already exists.");
+          setIsUpdating(false);
+        });
+    } else {
+      setErrorMsg("Username already exists.");
+      setIsUpdating(false);
+    }
+  };
+  const updateImg = profilePicUrl => {
+    if (profilePicUrl !== user.personalData.profilePicUrl) {
+      if (profilePicUrl.type.includes("image")) {
+        const uploadTask = storage
+          .ref(`images/${profilePicUrl.name}`)
+          .put(profilePicUrl);
+        uploadTask.on(
+          "state_changed",
+          snapshot => {},
+          error => {
+            setErrorMsg(error);
+            setIsUpdating(false);
+          },
+          () => {
+            storage
+              .ref("images")
+              .child(profilePicUrl.name)
+              .getDownloadURL()
+              .then(url => {
+                updateData(url);
+                setIsUpdating(false);
+              });
+          }
+        );
+      }
+    }
+  };
+  const validateUserName = userData => {
+    if (userData.userName === user.personalData.userName) {
+      return true;
+    } else {
+      db.collection("users")
+        .where("personalData.userName", "==", userData.userName)
+        .get()
+        .then(snapshot => {
+          if (snapshot.docs.length === 0) {
+            return true;
+          }
+          return false;
+        });
+    }
+  };
   return (
     <div className={style.settingsWrapper}>
       <h1 className={style.heading}>Settings</h1>
@@ -26,13 +151,19 @@ function Settings({ user }) {
             <img
               className={style.imgProfile}
               alt=""
-              src="https://instagram.flhe3-1.fna.fbcdn.net/v/t51.2885-19/s320x320/82906858_791653004647399_1879646176001654784_n.jpg?_nc_ht=instagram.flhe3-1.fna.fbcdn.net&_nc_ohc=SmNH9bvVA9YAX-RS6QI&oh=35d7846a807075da92e4193652c68e12&oe=5F80D88A"
+              src={user.personalData.profilePicUrl}
             ></img>
             <div className={style.nameUpdate}>
-              <h1>{user.displayName}</h1>
-              <button className={style.updatePhoto}>
-                Change Profile Photo
-              </button>
+              <h1>{user.personalData.userName}</h1>
+              <input
+                type="file"
+                name="profilePicUrl"
+                onChange={handleImg}
+                id="file"
+              />
+              <label htmlFor="file" className={style.updatePhoto}>
+                Update Profile Pic
+              </label>
             </div>
           </div>
         </div>
@@ -40,8 +171,8 @@ function Settings({ user }) {
           <h6>Name</h6>
           <input
             type="text"
-            value={userData.name}
-            name="name"
+            value={userData.fullName}
+            name="fullName"
             className={style.inpUpdate}
             onChange={handleChange}
           />
@@ -97,13 +228,25 @@ function Settings({ user }) {
           />
         </div>
         <div className={style.settingsSingWrapper}>
-          <button type="submit" className={style.subBtn}>
-            Submit
+          <span className={style.msg}>{errorMsg}</span>
+          <button
+            type="submit"
+            className={style.subBtn}
+            onClick={updateProfile}
+            disabled={!shouldUpdate}
+          >
+            Submit{" "}
+            {isUpdating && (
+              <img
+                src={loadingImg}
+                alt="loading..."
+                width="13px"
+                height="13px"
+              ></img>
+            )}
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-export default Settings;
