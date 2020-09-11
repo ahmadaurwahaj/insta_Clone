@@ -43,6 +43,7 @@ export default (state = userState, action) => {
       return {
         ...state,
         user: action.user,
+        isAuthenticated: true,
         isLoggingIn: false,
       };
     case LOGIN_FAILURE:
@@ -58,7 +59,7 @@ export default (state = userState, action) => {
         isRetrievingData: true,
         retrieveSuccess: false,
         retrievingError: false,
-        isAuthenticated: false,
+        // isAuthenticated: false,
       };
     case SUCESS_GET_USER_DATA:
       return {
@@ -68,12 +69,12 @@ export default (state = userState, action) => {
         isRetrievingData: false,
         retrieveSuccess: true,
         retrievingError: false,
-        isAuthenticated: true,
+        // isAuthenticated: true,
       };
     case FAILURE_GET_USER_DATA:
       return {
         ...state,
-        isAuthenticated: false,
+        // isAuthenticated: false,
         retrievingError: true,
       };
     case SIGNUP_REQUEST:

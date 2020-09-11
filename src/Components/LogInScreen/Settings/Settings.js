@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import style from "./Settings.module.css";
 import { db, storage } from "../../../Firebase/firebase";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { myFirebase } from "../../../Firebase/firebase";
 import loadingImg from "../../../static/img/loader.gif";
+import { getCurrentUserData } from "../../../Redux/Actions/auth";
 
 export default function Settings({ user }) {
   const docRef = useSelector(state => state.auth.docRef);
+  const userRef = useSelector(state => state.auth.user);
   const profileData = {
     fullName: user.personalData.fullName,
     userName: user.personalData.userName,
@@ -18,6 +20,7 @@ export default function Settings({ user }) {
     profilePicUrl: user.personalData.profilePicUrl,
   };
 
+  const dispatch = useDispatch();
   const [userData, setuserData] = useState(profileData);
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -71,35 +74,33 @@ export default function Settings({ user }) {
   // }
 
   const updateData = (url = userData.profilePicUrl) => {
-    if (validateUserName(userData)) {
-      let userAuth = myFirebase.auth().currentUser;
-      userAuth
-        .updateEmail(userData.email)
-        .then(function () {
-          db.collection("users")
-            .doc(docRef)
-            .update({
-              personalData: { ...userData, profilePicUrl: url },
-            })
-            .then(res => {
-              setErrorMsg("Data Updated Successfully");
-              setIsUpdating(false);
-              setShouldUpdate(false);
-            })
-            .catch(err => {
-              setErrorMsg("Internal Error");
-              setIsUpdating(false);
-            });
-        })
-        .catch(function (error) {
-          setErrorMsg("Email already exists.");
-          setIsUpdating(false);
-        });
-    } else {
-      setErrorMsg("Username already exists.");
-      setIsUpdating(false);
-    }
+    let userAuth = myFirebase.auth().currentUser;
+    userAuth
+      .updateEmail(userData.email)
+      .then(function () {
+        db.collection("users")
+          .doc(docRef)
+          .update({
+            personalData: { ...userData, profilePicUrl: url },
+          })
+          .then(res => {
+            setErrorMsg("Data Updated Successfully");
+            setIsUpdating(false);
+            setShouldUpdate(false);
+            // dispatch(getCurrentUserData(userAuth));
+            // console.log("j");
+          })
+          .catch(err => {
+            setErrorMsg("Internal Error");
+            setIsUpdating(false);
+          });
+      })
+      .catch(function (error) {
+        setErrorMsg("Email already exists.");
+        setIsUpdating(false);
+      });
   };
+
   const updateImg = profilePicUrl => {
     if (profilePicUrl !== user.personalData.profilePicUrl) {
       if (profilePicUrl.type.includes("image")) {
@@ -127,21 +128,26 @@ export default function Settings({ user }) {
       }
     }
   };
-  const validateUserName = userData => {
-    if (userData.userName === user.personalData.userName) {
-      return true;
-    } else {
-      db.collection("users")
-        .where("personalData.userName", "==", userData.userName)
-        .get()
-        .then(snapshot => {
-          if (snapshot.docs.length === 0) {
-            return true;
-          }
-          return false;
-        });
-    }
-  };
+  // function validateUserName(userData) {
+  //   if (userData.userName === user.personalData.userName) {
+  //     console.log("in first");
+  //     return true;
+  //   } else {
+  //     console.log("in second");
+  //     db.collection("users")
+  //       .where("personalData.userName", "==", userData.userName)
+  //       .get()
+  //       .then(snapshot => {
+  //         console.log(snapshot.docs.length);
+  //         if (parseInt(snapshot.docs.length) === 0) {
+  //           console.log("passed con");
+  //           return true;
+  //         } else {
+  //           return false;
+  //         }
+  //       });
+  //   }
+  // }
   return (
     <div className={style.settingsWrapper}>
       <h1 className={style.heading}>Settings</h1>
@@ -185,6 +191,7 @@ export default function Settings({ user }) {
             name="userName"
             className={style.inpUpdate}
             onChange={handleChange}
+            disabled
           />
         </div>
         <div className={`${style.settingsSingWrapper}`}>

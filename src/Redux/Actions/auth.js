@@ -145,6 +145,7 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
           .createUserWithEmailAndPassword(email, password)
           .then(user => {
             dispatch(receiveSignup(user));
+
             db.collection("users")
               .add({
                 personalData: {
@@ -159,6 +160,7 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
                 },
               })
               .catch(err => console.log(err));
+            dispatch(getUserData(user));
           })
           .catch(error => {
             dispatch(signupError(error.message));
@@ -179,6 +181,7 @@ export const getCurrentUserData = user => dispatch => {
     // .catch(err => dispatch(retrievingDataError()));
     .onSnapshot(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
+        console.log("snapshot");
         dispatch(
           retrievedUserData({
             userData: doc.data(),

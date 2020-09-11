@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import ProtectedRoute from "./Components/ProtectedRoute";
@@ -7,13 +7,17 @@ import Login from "./Components/LogOutScreen/SignIn/SignIn";
 import SignUp from "./Components/LogOutScreen/SignUp/Signup";
 import Settings from "./Components/LogInScreen/Settings/Settings";
 import Posts from "./Components/LogInScreen/MainDashboard/NewsFeed/Posts";
+import { useSelector, useDispatch } from "react-redux";
 import "./App.css";
-import { useSelector } from "react-redux";
+// import { getCurrentUserData } from "./Redux/Actions/auth";
 function App(props) {
   // const user = useSelector(state => state.auth.user);
-  const userData = useSelector(state => state.auth.userData);
+  // const user = useSelector(state => state.auth.user);
+  // const dispatch = useDispatch();
 
+  const userData = useSelector(state => state.auth.userData);
   const { isAuthenticated, isVerifying } = props;
+
   return (
     <Switch>
       <ProtectedRoute
