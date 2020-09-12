@@ -53,7 +53,6 @@ function App(props) {
         isNewUser={userData}
       />
       <ProtectedRoute
-        exact
         path="/profile"
         component={Profile}
         isAuthenticated={isAuthenticated}

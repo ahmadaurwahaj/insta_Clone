@@ -1,13 +1,13 @@
 import React from "react";
 import style from "./Profile.module.css";
-import { Route, Switch, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PostsBox from "./PostsBox";
 import NavLinks from "./ProfileMediaHeader";
-function Profile({ user }) {
+function Profile({ user, match }) {
   const numOfPosts = user.posts.length;
   const numOfFollowers = user.followers.length;
   const numOfFollowing = user.following.length;
-  console.log(numOfPosts);
+
   return (
     <div className={style.mainWrapper}>
       <div className={style.profileWrapper}>
@@ -45,16 +45,10 @@ function Profile({ user }) {
         </div>
       </div>
       <div className={style.mediaDisplayDiv}>
-        <NavLinks />
+        <NavLinks isExact={match.isExact} />
         <div className={style.mediaMain}>
-          <Switch>
-            <Route path="/profile/" exact>
-              <PostsBox />
-            </Route>
-            <Route path="/profile/saved/" exact>
-              <PostsBox />
-            </Route>
-          </Switch>
+          {match.isExact === true && <PostsBox posts={user.posts} />}
+          {match.isExact === false && <PostsBox posts={user.saved} />}
         </div>
       </div>
     </div>

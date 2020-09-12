@@ -1,13 +1,21 @@
 import React from "react";
 import style from "./Profile.module.css";
 import { Link } from "react-router-dom";
-function ProfileMediaHeader() {
+function ProfileMediaHeader({ isExact }) {
   return (
     <div className={style.headerNavLinks}>
-      <Link to="/profile/" className={style.activeLink}>
+      <Link
+        to="/profile/"
+        className={`${isExact === true && style.activeLink}`}
+      >
         POSTS
       </Link>
-      <Link to="/profile/saved">SAVED</Link>
+      <Link
+        to="/profile/saved"
+        className={`${isExact === false && style.activeLink}`}
+      >
+        SAVED
+      </Link>
     </div>
   );
 }
