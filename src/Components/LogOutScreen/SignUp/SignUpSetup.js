@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import style from "./SignupSetUp.module.css";
 import ProfilePhoto from "./../../../static/img/profilePhoto.png";
-import { myFirebase, db, storage } from "../../../Firebase/firebase";
-import Loader from "../../../static/img/loader.gif";
+import { db, storage } from "../../../Firebase/firebase";
+// import Loader from "../../../static/img/loader.gif";
 import { useSelector } from "react-redux";
 function SignUpSetup() {
   const initState = {
@@ -11,7 +11,7 @@ function SignUpSetup() {
   };
 
   const docRef = useSelector(state => state.auth.docRef);
-  const user = useSelector(state => state.auth.userData);
+  // const user = useSelector(state => state.auth.userData);
   const [userData, setuserData] = useState(initState);
   const [displayPic, setDisplayPic] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
