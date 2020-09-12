@@ -19,7 +19,7 @@ function SpecificPost({ match }) {
   const userData = useSelector(state => state.auth.userData);
   const docRef = useSelector(state => state.auth.docRef);
   const [modalOpen, setModalOpen] = useState(false);
-  const [like, setLike] = useState(false);
+  //   const [like, setLike] = useState(false);
   useEffect(() => {
     db.collection("posts")
       .doc(match.params.docId)
