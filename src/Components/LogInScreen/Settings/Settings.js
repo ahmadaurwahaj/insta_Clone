@@ -243,7 +243,7 @@ export default function Settings({ user }) {
             onClick={updateProfile}
             disabled={!shouldUpdate}
           >
-            Submit{" "}
+            Submit
             {isUpdating && (
               <img
                 src={loadingImg}

@@ -2,11 +2,13 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import Header from "./LogInScreen/Header/Header";
 import Loader from "./LogInScreen/Loader/Loader";
+import SetupProfile from "../Components/LogOutScreen/SignUp/SignUpSetup";
 const ProtectedRoute = ({
   component: Component,
   isAuthenticated,
   isVerifying,
   retrieveSuccess,
+  isNewUser,
   ...rest
 }) => (
   <Route
@@ -18,8 +20,14 @@ const ProtectedRoute = ({
         <>
           {retrieveSuccess ? (
             <>
-              <Header></Header>
-              <Component {...props} {...rest} />
+              {isNewUser.personalData.isNewUser ? (
+                <SetupProfile />
+              ) : (
+                <>
+                  <Header></Header>
+                  <Component {...props} {...rest} />
+                </>
+              )}
             </>
           ) : (
             <Loader />

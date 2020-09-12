@@ -156,7 +156,13 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
                   website: "",
                   profilePicUrl: "",
                   bio: "",
+                  isNewUser: true,
                 },
+                followers: [],
+                following: [],
+                posts: [],
+                notifications: [],
+                saved: [],
               })
               .catch(err => console.log(err));
             dispatch(getUserData(user));

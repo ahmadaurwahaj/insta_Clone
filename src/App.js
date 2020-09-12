@@ -7,9 +7,12 @@ import Login from "./Components/LogOutScreen/SignIn/SignIn";
 import SignUp from "./Components/LogOutScreen/SignUp/Signup";
 import Settings from "./Components/LogInScreen/Settings/Settings";
 import Posts from "./Components/LogInScreen/MainDashboard/NewsFeed/Posts";
+import ProfileSetup from "./Components/LogOutScreen/SignUp/SignUpSetup";
+import Profile from "./Components/LogInScreen/Profile/Profile";
 import { useSelector, useDispatch } from "react-redux";
 import "./App.css";
 import { getCurrentUserData } from "./Redux/Actions/auth";
+
 function App(props) {
   const user = useSelector(state => state.auth.user);
   const retrieveSuccess = useSelector(state => state.auth.retrieveSuccess);
@@ -37,6 +40,7 @@ function App(props) {
         isVerifying={isVerifying}
         retrieveSuccess={retrieveSuccess}
         user={userData}
+        isNewUser={userData}
       />
       <ProtectedRoute
         exact
@@ -46,9 +50,21 @@ function App(props) {
         isVerifying={isVerifying}
         user={userData}
         retrieveSuccess={retrieveSuccess}
+        isNewUser={userData}
+      />
+      <ProtectedRoute
+        exact
+        path="/profile"
+        component={Profile}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+        user={userData}
+        retrieveSuccess={retrieveSuccess}
+        isNewUser={userData}
       />
       <Route path="/login" component={Login} exact />
       <Route path="/signup" component={SignUp} exact />
+      <Route path="/profileSetup" component={ProfileSetup} exact />
     </Switch>
   );
 }
