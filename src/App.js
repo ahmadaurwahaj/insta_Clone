@@ -9,6 +9,7 @@ import Settings from "./Components/LogInScreen/Settings/Settings";
 import Posts from "./Components/LogInScreen/MainDashboard/NewsFeed/Posts";
 import ProfileSetup from "./Components/LogOutScreen/SignUp/SignUpSetup";
 import Profile from "./Components/LogInScreen/Profile/Profile";
+import SpecificPost from "./Components/LogInScreen/SpecificPost/SpecificPost";
 import { useSelector, useDispatch } from "react-redux";
 import "./App.css";
 import { getCurrentUserData } from "./Redux/Actions/auth";
@@ -55,6 +56,16 @@ function App(props) {
       <ProtectedRoute
         path="/profile"
         component={Profile}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+        user={userData}
+        retrieveSuccess={retrieveSuccess}
+        isNewUser={userData}
+      />
+      <ProtectedRoute
+        path="/p/:docId"
+        exact
+        component={SpecificPost}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
         user={userData}

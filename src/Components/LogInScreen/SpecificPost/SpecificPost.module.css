@@ -1,0 +1,178 @@
+.mainWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  margin: 90px 0px 40px;
+}
+
+.postContainer {
+  width: 75%;
+  min-width: 768px;
+  max-width: 1000px;
+  display: flex;
+  background: var(--box-bg-color);
+  border: 1px solid var(--box-border-color);
+  flex-direction: row;
+  border-radius: 4px;
+}
+
+.imageContainer {
+  width: 65%;
+  border-right: 1px solid var(--box-border-color);
+  display: flex;
+}
+
+.mediaImg {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  /* height: 100%; */
+}
+
+.detailsContainer {
+  width: 35%;
+}
+.imageNameDiv {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom: 1px solid var(--box-border-color);
+}
+.linkImgName {
+  display: flex;
+  align-items: center;
+}
+.userProfileImg,
+.commentImg {
+  width: 40px;
+  border-radius: 100px;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.authorUserName,
+.commentAuthorName {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--primary-black-color);
+}
+
+.commentSection {
+  width: 100%;
+  display: flex;
+  min-height: 0px;
+  max-height: 70%;
+  overflow-y: scroll;
+
+  padding: 20px;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.innerCommentSection {
+  display: flex;
+  align-items: flex-start;
+}
+
+.singComment {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.authorData {
+  display: flex;
+  align-items: center;
+}
+.commentContent {
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+.reactDiv {
+  padding: 20px;
+  border-top: 1px solid var(--box-border-color);
+  border-bottom: 1px solid var(--box-border-color);
+}
+
+.iconReact {
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.likedByDiv {
+  margin-top: 4px;
+}
+
+.likedCountNum {
+  font-size: 15px;
+  font-weight: 500;
+}
+.likesLink {
+  color: var(--primary-black-color);
+  margin-left: 4px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modalWrapper {
+  width: 90vw;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--box-border-color);
+  box-sizing: border-box;
+}
+
+.modalHeader {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--box-border-color);
+  position: absolute;
+}
+
+.modalHeader h3 {
+  font-weight: 400;
+}
+
+.modalCloseBtn {
+  font-size: 24px;
+  border: 0px;
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+
+.modalDataDiv {
+  display: flex;
+  width: 100%;
+  margin-top: 55px;
+}
+
+.singleModalDataDiv {
+  display: flex;
+  padding: 16px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.modalLink {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.modalUserImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  margin-right: 10px;
+}
