@@ -11,6 +11,7 @@ import ProfileSetup from "./Components/LogOutScreen/SignUp/SignUpSetup";
 import Profile from "./Components/LogInScreen/Profile/Profile";
 import SpecificPost from "./Components/LogInScreen/SpecificPost/SpecificPost";
 import { useSelector, useDispatch } from "react-redux";
+import Account from "./Components/LogInScreen/Accounts/Accounts";
 import "./App.css";
 import { getCurrentUserData } from "./Redux/Actions/auth";
 
@@ -61,11 +62,22 @@ function App(props) {
         user={userData}
         retrieveSuccess={retrieveSuccess}
         isNewUser={userData}
+        selfProfile={true}
       />
       <ProtectedRoute
         path="/p/:docId"
         exact
         component={SpecificPost}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+        user={userData}
+        retrieveSuccess={retrieveSuccess}
+        isNewUser={userData}
+      />
+      <ProtectedRoute
+        path="/accounts/:id"
+        exact
+        component={Account}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
         user={userData}

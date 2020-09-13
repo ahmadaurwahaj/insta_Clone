@@ -2,12 +2,14 @@
   display: flex;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
+  /* height: 100vh;
+  height: auto; */
   margin: 90px 0px 40px;
 }
 
 .postContainer {
   width: 75%;
+  /* height: auto; */
   min-width: 768px;
   max-width: 1000px;
   display: flex;
@@ -21,6 +23,8 @@
   width: 65%;
   border-right: 1px solid var(--box-border-color);
   display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .mediaImg {
@@ -32,6 +36,8 @@
 
 .detailsContainer {
   width: 35%;
+  display: flex;
+  flex-direction: column;
 }
 .imageNameDiv {
   width: 100%;
@@ -63,17 +69,29 @@
   width: 100%;
   display: flex;
   min-height: 0px;
-  max-height: 70%;
+  max-height: 520px;
+  /* max-height: 10.1%; */
   overflow-y: scroll;
-
-  padding: 20px;
+  /* overflow-x: hidden; */
+  padding: 10px;
   box-sizing: border-box;
   flex-direction: column;
   justify-content: flex-start;
+  word-wrap: break-word; /* All browsers since IE 5.5+ */
+}
+.commentSection::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.commentSection {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .innerCommentSection {
   display: flex;
   align-items: flex-start;
+  padding: 10px;
 }
 
 .singComment {
@@ -81,15 +99,23 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .authorData {
   display: flex;
   align-items: center;
 }
+.commentContetn {
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
 .commentContent {
   font-size: 14px;
   margin-left: 8px;
+  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 .reactDiv {
@@ -175,4 +201,71 @@
   height: 40px;
   border-radius: 100px;
   margin-right: 10px;
+}
+
+.commentPostSection form {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+}
+.commentInp {
+  border: 0px;
+  width: 100%;
+  height: auto;
+  max-height: 60px;
+  background: transparent;
+}
+
+.commentBtn {
+  background: transparent;
+  border: 0px;
+  color: var(--primary-blue-color);
+  font-weight: 600;
+  font-size: 14px;
+}
+.commentBtn:disabled {
+  color: rgba(0, 146, 249, 0.3);
+}
+
+@media only screen and (min-width: 800px) {
+  .nameDivUpper {
+    display: none;
+  }
+}
+@media only screen and (max-width: 800px) {
+  .postContainer {
+    width: 100%;
+    flex-direction: column;
+    background: transparent;
+    border: 0px;
+    max-width: 100%;
+    min-width: 0px;
+  }
+  .nameDivUpper {
+    display: "";
+    width: 100%;
+    border: 0px;
+    max-width: 100%;
+    min-width: 0px;
+  }
+  .nameDivLower {
+    display: none;
+  }
+  .detailsContainer {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0px;
+  }
+  .imageContainer {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0px;
+  }
+
+  .commentSection {
+    max-width: 100%;
+    min-width: 0px;
+    max-height: 200px;
+  }
 }

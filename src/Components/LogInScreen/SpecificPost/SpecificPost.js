@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
 import { MdClose as Close } from "react-icons/md";
+// import firebase from "firebase/app";
 import {
   BsBookmark as Bookmark,
   BsBookmarkCheck as Bookmarked,
@@ -19,6 +20,7 @@ function SpecificPost({ match }) {
   const userData = useSelector(state => state.auth.userData);
   const docRef = useSelector(state => state.auth.docRef);
   const [modalOpen, setModalOpen] = useState(false);
+  const [comment, setComment] = useState("");
   //   const [like, setLike] = useState(false);
   useEffect(() => {
     db.collection("posts")
@@ -51,8 +53,8 @@ function SpecificPost({ match }) {
     return true;
   };
 
-  const pushNotificiation = type => {
-    let msg = "";
+  const pushNotificiation = (msg, type) => {
+    let msgToPush = "";
     let notificationsFiltered = null;
     // if (postData.authorUserName === userData.personalData.userName) {
     //   console.log(postData.authorUserName);
@@ -62,64 +64,48 @@ function SpecificPost({ match }) {
       .then(res => {
         res.forEach(doc => {
           const notificationsData = doc.data().notifications;
+          const recentNotification = notificationsData.filter(
+            data => data.postUrl === postData.docId && data.type === type
+          );
+          console.log(recentNotification);
           if (type === "likePush") {
-            console.log("here");
-            const recentNotification = notificationsData.filter(
-              data => data.postUrl === postData.docId && data.type === type
-            );
-            console.log(recentNotification, "hello");
-            if (recentNotification.length > 0) {
-              if (postData.likes.length > 1) {
-                msg = `${userData.personalData.userName} and ${
-                  postData.likes.length - 1
-                } recently liked your Post`;
-              } else {
-                msg = `${userData.personalData.userName}  recently liked your Post`;
-              }
-
-              console.log(notificationsFiltered);
+            if (postData.likes.length >= 1) {
+              msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;
             } else {
-              msg = `${userData.personalData.userName}  recently liked your Post`;
+              console.log("here");
+              msgToPush = `${userData.personalData.userName}  ${msg}`;
             }
-            notificationsFiltered = notificationsData.filter(
-              data => data.postUrl !== postData.docId && data.type !== type
-            );
-          }
-          if (type === "likePush") {
-            console.log("here");
-            const recentNotification = notificationsData.filter(
-              data => data.postUrl === postData.docId && data.type === type
-            );
-            console.log(recentNotification, "hello");
-            if (recentNotification.length > 0) {
-              if (postData.likes.length > 1) {
-                msg = `${userData.personalData.userName} and ${
-                  postData.likes.length - 1
-                } recently liked your Post`;
-              } else {
-                msg = `${userData.personalData.userName}  recently liked your Post`;
-              }
 
-              console.log(notificationsFiltered);
+            //   console.log(notificationsFiltered);
+          } else if (type === "commentPush") {
+            if (postData.comments.length >= 1) {
+              msgToPush = `${userData.personalData.userName} and ${postData.comments.length} others ${msg}`;
             } else {
-              msg = `${userData.personalData.userName}  recently liked your Post`;
+              msgToPush = `${userData.personalData.userName}  ${msg}`;
             }
-            notificationsFiltered = notificationsData.filter(
-              data => data.postUrl !== postData.docId && data.type !== type
-            );
+
+            //   console.log(notificationsFiltered);
           }
+          //    else {
+          //     msgToPush = `${userData.personalData.userName}  ${msg}`;
+          //   }
+          notificationsFiltered = notificationsData.filter(
+            data => data.postUrl !== postData.docId || data.type !== type
+          );
+          //   notificationsFiltered = notificationsData;
+          console.log(notificationsFiltered, "notifications filtered");
           db.collection("users")
             .doc(doc.id)
             .update({
               notifications: [
-                ...notificationsFiltered,
                 {
                   type,
                   redirectUrl: `/p/${postData.docId}`,
-                  message: `${msg}`,
+                  message: `${msgToPush}`,
                   byUser: userData.personalData.userName,
                   postUrl: postData.docId,
                 },
+                ...notificationsFiltered,
               ],
             });
         });
@@ -135,13 +121,37 @@ function SpecificPost({ match }) {
       .get()
       .then(res => {
         res.forEach(doc => {
-          const notificationsData = doc
+          console.log(doc.data().notifications);
+          let notificationsData = doc
             .data()
             .notifications.filter(
               data =>
-                data.postUrl === userData.personalData.userName &&
-                data.type === type
+                data.type !== type ||
+                data.postUrl === userData.personalData.userName
             );
+          if (type === "likePush") {
+            if (postData.likes.length > 1) {
+              let msg = "";
+              if (postData.likes.length > 2) {
+                msg = `${postData.likes[0].likedByUserName} and ${
+                  postData.likes.length - 1
+                } liked your photo`;
+              } else {
+                msg = `${postData.likes[0].likedByUserName} liked your photo`;
+              }
+              const newNotifData = [
+                ...notificationsData,
+                {
+                  type,
+                  redirectUrl: `/p/${postData.docId}`,
+                  message: `${msg}`,
+                  byUser: postData.likes[0].likedByUserName,
+                  postUrl: postData.docId,
+                },
+              ];
+              notificationsData = newNotifData;
+            }
+          }
           console.log("pull", notificationsData);
           db.collection("users")
             .doc(doc.id)
@@ -165,7 +175,7 @@ function SpecificPost({ match }) {
           },
         ],
       });
-    pushNotificiation("likePush");
+    pushNotificiation("recently liked your post", "likePush");
   };
   const removeLike = () => {
     const arr = postData.likes;
@@ -178,6 +188,30 @@ function SpecificPost({ match }) {
     pullNotificiation("likePush");
   };
 
+  const addComment = e => {
+    e.preventDefault();
+    if (comment === "") {
+      console.log("Cant input");
+    } else {
+      const comments = postData.comments;
+      db.collection("posts")
+        .doc(postData.docId)
+        .update({
+          comments: [
+            ...comments,
+            {
+              commentAuthorImg: userData.personalData.profilePicUrl,
+              commentAuthorName: userData.personalData.userName,
+              commentContent: comment,
+            },
+          ],
+        })
+        .then(res => {
+          setComment("");
+          pushNotificiation("recently commmented on your post", "commentPush");
+        });
+    }
+  };
   const isSaved = arr => {
     if (arr.filter(res => res.ref === postData.docId).length > 0) {
       return true;
@@ -205,6 +239,21 @@ function SpecificPost({ match }) {
     <div className={style.mainWrapper}>
       {postData !== null ? (
         <div className={style.postContainer}>
+          <div className={`${style.imageNameDiv} ${style.nameDivUpper}`}>
+            <Link
+              to={`/accounts/${postData.authorUserName}`}
+              className={style.linkImgName}
+            >
+              <img
+                src={postData.authorProfilePicUrl}
+                alt="profilePicUrl"
+                className={style.userProfileImg}
+              ></img>
+              <h3 className={style.authorUserName}>
+                {postData.authorUserName}
+              </h3>
+            </Link>
+          </div>
           <div className={style.imageContainer}>
             <img
               src={postData.mediaUrl}
@@ -213,7 +262,7 @@ function SpecificPost({ match }) {
             />
           </div>
           <div className={style.detailsContainer}>
-            <div className={style.imageNameDiv}>
+            <div className={`${style.imageNameDiv} ${style.nameDivLower}`}>
               <Link
                 to={`/accounts/${postData.authorUserName}`}
                 className={style.linkImgName}
@@ -360,6 +409,23 @@ function SpecificPost({ match }) {
                   </Dialog>
                 </span>
               </div>
+            </div>
+            <div className={style.commentPostSection}>
+              <form onSubmit={addComment}>
+                <textarea
+                  placeholder="Add a comment..."
+                  className={style.commentInp}
+                  value={comment}
+                  onChange={e => setComment(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className={style.commentBtn}
+                  disabled={comment === ""}
+                >
+                  Post
+                </button>
+              </form>
             </div>
           </div>
         </div>

@@ -80,8 +80,10 @@
 .lastIcon {
   margin-right: 0px;
   width: 25px;
-  height: auto;
+  height: 25px;
   border-radius: 48px;
+  object-fit: cover;
+  border: 1px solid var(--box-border-color);
 }
 
 .profileDropDown {
