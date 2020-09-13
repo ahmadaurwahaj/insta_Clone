@@ -3,8 +3,7 @@ import style from "./SpecificPost.module.css";
 import { db } from "../../../Firebase/firebase";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Dialog from "@material-ui/core/Dialog";
-import { MdClose as Close } from "react-icons/md";
+import Modal from "./../Modal/Modal";
 // import firebase from "firebase/app";
 import {
   BsBookmark as Bookmark,
@@ -343,7 +342,7 @@ function SpecificPost({ match }) {
                             onClick={handleClickOpen}
                           >
                             {postData.likes.length - 1} others
-                          </span>{" "}
+                          </span>
                         </>
                       ) : (
                         <>
@@ -358,55 +357,14 @@ function SpecificPost({ match }) {
                       )}
                     </>
                   )}
-                  <Dialog
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
-                    open={modalOpen}
-                  >
-                    <div className={style.modalWrapper}>
-                      <div className={style.modalHeader}>
-                        <h3>Likes</h3>
-                        <button
-                          type="submit"
-                          onClick={handleClose}
-                          className={style.modalCloseBtn}
-                        >
-                          <Close className={style.modalClose} />
-                        </button>
-                      </div>
-                      <div className={style.modalDataDiv}>
-                        {postData.likes.map(
-                          (data, index) => (
-                            <React.Fragment key={index}>
-                              {index > 0 && (
-                                <>
-                                  <div
-                                    key={data.likedByUserName}
-                                    className={style.singleModalDataDiv}
-                                  >
-                                    <Link
-                                      to={`/accounts/${data.likedByUserName}`}
-                                      className={style.modalLink}
-                                    >
-                                      <img
-                                        src={data.likedByProfilePicUrl}
-                                        alt=""
-                                        className={style.modalUserImg}
-                                      />
-                                      <h3 className={style.authorUserName}>
-                                        {data.likedByUserName}
-                                      </h3>
-                                    </Link>
-                                  </div>
-                                </>
-                              )}
-                            </React.Fragment>
-                          ),
-                          []
-                        )}
-                      </div>
-                    </div>
-                  </Dialog>
+                  <Modal
+                    heading="Likes"
+                    modalData={postData.likes}
+                    userNameKey="likedByUserName"
+                    profilePicKey="likedByProfilePicUrl"
+                    modalOpen={modalOpen}
+                    handleClose={handleClose}
+                  />
                 </span>
               </div>
             </div>

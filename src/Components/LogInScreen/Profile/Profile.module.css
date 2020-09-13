@@ -155,6 +155,9 @@
   padding: 40px;
   font-weight: 400;
 }
+.modalBtn {
+  cursor: pointer;
+}
 @media only screen and (max-width: 768px) {
   .profileWrapper {
     max-width: 100vw;
