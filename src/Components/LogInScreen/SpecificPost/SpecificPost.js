@@ -58,7 +58,6 @@ function SpecificPost({ match }) {
   };
 
   const pushNotificiation = (msg, type) => {
-    let msgToPush = "";
     let notificationsFiltered = null;
     if (postData.authorUserName !== userData.personalData.userName) {
       db.collection("users")
@@ -67,6 +66,8 @@ function SpecificPost({ match }) {
         .then(res => {
           res.forEach(doc => {
             const notificationsData = doc.data().notifications;
+            let msgToPush = "";
+            msgToPush = "hello";
             if (type === "likePush") {
               if (postData.likes.length >= 1) {
                 msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;
@@ -84,7 +85,11 @@ function SpecificPost({ match }) {
               data => data.postUrl !== postData.docId || data.type !== type
             );
 
-            console.log(notificationsFiltered, "notifications filtered");
+            console.log(
+              notificationsFiltered,
+              "notifications filtered",
+              msgToPush
+            );
             db.collection("users").doc(doc.id).update({
               hello: "how are yous",
             });
