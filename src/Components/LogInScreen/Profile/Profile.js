@@ -6,7 +6,7 @@ import NavLinks from "./ProfileMediaHeader";
 import { useSelector } from "react-redux";
 import { db } from "../../../Firebase/firebase";
 
-import Modal from "./../Modal/Modal";
+// import Modal from "./../Modal/Modal";
 
 function Profile({ user, match, selfProfile, docId }) {
   const numOfPosts = user.posts.length;
@@ -169,21 +169,21 @@ function Profile({ user, match, selfProfile, docId }) {
           )}
         </div>
       </div>
-      <Modal
+      {/* <Modal
         heading="Followers"
         modalData={user.followers}
         userNameKey="followerUserName"
         profilePicKey="followerPicUrl"
         modalOpen={modalOpen.followModal}
         handleClose={() => handleClose("followModal")}
-      />
-      <Modal
+      /> */}
+      {/* <Modal
         heading="Following"
         modalData={user.following}
         userNameKey="followingUserName"
         profilePicKey="followingPicUrl"
         modalOpen={modalOpen.followingModal}
-        handleClose={() => handleClose("followingModal")}
+        handleClose={() => handleClose("followingModal")} */}
       />
     </div>
   );
