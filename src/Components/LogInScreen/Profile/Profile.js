@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./Profile.module.css";
 import { Link } from "react-router-dom";
 import PostsBox from "./PostsBox";
@@ -6,8 +6,8 @@ import NavLinks from "./ProfileMediaHeader";
 import { useSelector } from "react-redux";
 import { db } from "../../../Firebase/firebase";
 
-// import Dialog from "@material-ui/core/Dialog";
-// import { MdClose as Close } from "react-icons/md";
+import Modal from "../Modal/Modal";
+
 function Profile({ user, match, selfProfile, docId }) {
   const numOfPosts = user.posts.length;
   const numOfFollowers = user.followers.length;
@@ -15,6 +15,20 @@ function Profile({ user, match, selfProfile, docId }) {
   const userData = useSelector(state => state.auth.userData);
   const docRef = useSelector(state => state.auth.docRef);
 
+  const modalState = {
+    followModal: false,
+    followingModal: false,
+  };
+
+  const [modalOpen, setmodalOpen] = useState(modalState);
+
+  const handleOpen = key => {
+    setmodalOpen({ ...modalOpen, [key]: true });
+  };
+
+  const handleClose = key => {
+    setmodalOpen({ ...modalOpen, [key]: false });
+  };
   const isFollowed = () => {
     if (
       user.followers.filter(
@@ -109,10 +123,20 @@ function Profile({ user, match, selfProfile, docId }) {
                 <strong>{numOfPosts}</strong> posts
               </h1>
               <h1>
-                <strong>{numOfFollowers}</strong> followers
+                <span
+                  onClick={() => handleOpen("followingModal")}
+                  className={style.modalBtn}
+                >
+                  <strong>{numOfFollowers}</strong> followers
+                </span>
               </h1>
               <h1>
-                <strong>{numOfFollowing}</strong> following
+                <span
+                  onClick={() => handleOpen("followingModal")}
+                  className={style.modalBtn}
+                >
+                  <strong>{numOfFollowing}</strong> following
+                </span>
               </h1>
             </div>
             <div className={style.nameBioContainer}>
@@ -135,6 +159,23 @@ function Profile({ user, match, selfProfile, docId }) {
           )}
         </div>
       </div>
+
+      <Modal
+        heading="Following"
+        modalData={user.following}
+        userNameKey="followingUserName"
+        profilePicKey="followingPicUrl"
+        modalOpen={modalOpen.followingModal}
+        handleClose={() => handleClose("followingModal")}
+      />
+      <Modal
+        heading="Followers"
+        modalData={user.followers}
+        userNameKey="followerUserName"
+        profilePicKey="followerPicUrl"
+        modalOpen={modalOpen.followModal}
+        handleClose={() => handleClose("followModal")}
+      />
     </div>
   );
 }
