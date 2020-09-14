@@ -14,6 +14,7 @@ function Profile({ user, match, selfProfile, docId }) {
   const numOfFollowing = user.following.length;
   const userData = useSelector(state => state.auth.userData);
   const docRef = useSelector(state => state.auth.docRef);
+  const postData = user.posts;
 
   const modalState = {
     followModal: false,
@@ -48,8 +49,15 @@ function Profile({ user, match, selfProfile, docId }) {
     const userFollowers = user.followers.filter(
       data => data.followerUserName !== userData.personalData.userName
     );
+
+    const notifications = user.notifications.filter(
+      data =>
+        data.byUser !== userData.personalData.userName ||
+        data.type !== "followPush"
+    );
     db.collection("users").doc(docId).update({
       followers: userFollowers,
+      notifications,
     });
     db.collection("users").doc(docRef).update({
       following: selfFollowing,
@@ -59,6 +67,8 @@ function Profile({ user, match, selfProfile, docId }) {
   const addFollow = () => {
     const selfFollowing = userData.following;
     const userFollowers = user.followers;
+    const notifications = user.notifications;
+
     db.collection("users")
       .doc(docId)
       .update({
@@ -69,7 +79,17 @@ function Profile({ user, match, selfProfile, docId }) {
             followerPicUrl: userData.personalData.profilePicUrl,
           },
         ],
+        notifications: [
+          {
+            byUser: userData.personalData.userName,
+            message: `${userData.personalData.userName} started following you`,
+            redirectUrl: `/accounts/${userData.personalData.userName}`,
+            type: "followPush",
+          },
+          ...notifications,
+        ],
       });
+
     db.collection("users")
       .doc(docRef)
       .update({
@@ -155,7 +175,7 @@ function Profile({ user, match, selfProfile, docId }) {
               {match.isExact === false && <PostsBox posts={user.saved} />}
             </>
           ) : (
-            <PostsBox posts={user.posts} />
+            <PostsBox posts={postData} />
           )}
         </div>
       </div>

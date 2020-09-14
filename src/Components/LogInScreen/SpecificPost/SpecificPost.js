@@ -63,9 +63,9 @@ function SpecificPost({ match }) {
         .then(res => {
           res.forEach(doc => {
             const notificationsData = doc.data().notifications;
-            const recentNotification = notificationsData.filter(
-              data => data.postUrl === postData.docId && data.type === type
-            );
+            // const recentNotification = notificationsData.filter(
+            //   data => data.postUrl === postData.docId && data.type === type
+            // );
             if (type === "likePush") {
               if (postData.likes.length >= 1) {
                 msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;

@@ -82,42 +82,17 @@
   width: 25px;
   height: 25px;
   border-radius: 48px;
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid var(--box-border-color);
 }
 
-.profileDropDown {
-  background: var(--box-bg-color);
-  position: absolute;
-  transition: all 1s ease;
-  /* pading: 20px; */
+.profileDropDownMenu {
   display: flex;
   flex-direction: column;
   width: 200px;
-  right: -16px;
-}
-
-.profileDropDown::before {
-  width: 0px;
-  height: 0px;
-  border-top: 10px solid #fff;
-  border-right: 10px solid #fff;
-  border-left: 0px solid black;
-  border-bottom: 0px solid black;
-  content: "";
-  position: absolute;
-  margin-top: -1px;
-  right: 23px;
-  z-index: 0;
-  transform: rotate(45deg);
-  /* box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.0975); */
-}
-
-.profileDropDownMenu {
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.0975);
-  background: #fff;
-  border-radius: 4px;
-  margin-top: 4px;
+  padding: 0px;
+  margin: 0px;
+  padding-top: 0px;
 }
 
 .profileDropDownli {
@@ -146,6 +121,34 @@
 
 .profileDropDownText {
   margin-left: 10px;
+}
+.notifWrapper {
+  padding: 0px;
+  margin-top: 30px;
+}
+.dropDownNotif {
+  max-width: 470px;
+  width: 90vw;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  color: var(--primary-black-color);
+  list-style-type: none;
+  max-height: 400px;
+}
+
+.singleNotif {
+  color: var(--primary-black-color);
+  padding: 22px 12px;
+  border-bottom: 1px solid var(--box-border-color);
+}
+
+.noNotif {
+  width: 100%;
+  text-align: center;
+  padding: 0px;
+  font-weight: 400;
+  font-size: 20px;
 }
 
 @media only screen and (max-width: 768px) {

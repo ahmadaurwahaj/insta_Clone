@@ -11,7 +11,6 @@ function Modal({
   modalOpen,
   handleClose,
 }) {
-  console.log(modalData);
   return (
     <>
       <Dialog
