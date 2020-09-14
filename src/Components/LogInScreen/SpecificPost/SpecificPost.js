@@ -55,111 +55,96 @@ function SpecificPost({ match }) {
   const pushNotificiation = (msg, type) => {
     let msgToPush = "";
     let notificationsFiltered = null;
-    // if (postData.authorUserName === userData.personalData.userName) {
-    //   console.log(postData.authorUserName);
-    db.collection("users")
-      .where("personalData.userName", "==", postData.authorUserName)
-      .get()
-      .then(res => {
-        res.forEach(doc => {
-          const notificationsData = doc.data().notifications;
-          const recentNotification = notificationsData.filter(
-            data => data.postUrl === postData.docId && data.type === type
-          );
-          console.log(recentNotification);
-          if (type === "likePush") {
-            if (postData.likes.length >= 1) {
-              msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;
-            } else {
-              console.log("here");
-              msgToPush = `${userData.personalData.userName}  ${msg}`;
-            }
+    if (postData.authorUserName !== userData.personalData.userName) {
+      db.collection("users")
+        .where("personalData.userName", "==", postData.authorUserName)
+        .get()
+        .then(res => {
+          res.forEach(doc => {
+            const notificationsData = doc.data().notifications;
 
-            //   console.log(notificationsFiltered);
-          } else if (type === "commentPush") {
-            if (postData.comments.length >= 1) {
-              msgToPush = `${userData.personalData.userName} and ${postData.comments.length} others ${msg}`;
-            } else {
-              msgToPush = `${userData.personalData.userName}  ${msg}`;
+            if (type === "likePush") {
+              if (postData.likes.length >= 1) {
+                msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;
+              } else {
+                msgToPush = `${userData.personalData.userName}  ${msg}`;
+              }
+            } else if (type === "commentPush") {
+              if (postData.comments.length >= 1) {
+                msgToPush = `${userData.personalData.userName} and ${postData.comments.length} others ${msg}`;
+              } else {
+                msgToPush = `${userData.personalData.userName}  ${msg}`;
+              }
             }
-
-            //   console.log(notificationsFiltered);
-          }
-          //    else {
-          //     msgToPush = `${userData.personalData.userName}  ${msg}`;
-          //   }
-          notificationsFiltered = notificationsData.filter(
-            data => data.postUrl !== postData.docId || data.type !== type
-          );
-          //   notificationsFiltered = notificationsData;
-          console.log(notificationsFiltered, "notifications filtered");
-          db.collection("users")
-            .doc(doc.id)
-            .update({
-              notifications: [
-                {
-                  type,
-                  redirectUrl: `/p/${postData.docId}`,
-                  message: `${msgToPush}`,
-                  byUser: userData.personalData.userName,
-                  postUrl: postData.docId,
-                },
-                ...notificationsFiltered,
-              ],
-            });
+            notificationsFiltered = notificationsData.filter(
+              data => data.postUrl !== postData.docId || data.type !== type
+            );
+            db.collection("users")
+              .doc(doc.id)
+              .update({
+                notifications: [
+                  {
+                    type,
+                    redirectUrl: `/p/${postData.docId}`,
+                    message: `${msgToPush}`,
+                    byUser: userData.personalData.userName,
+                    postUrl: postData.docId,
+                  },
+                  ...notificationsFiltered,
+                ],
+              });
+          });
         });
-      });
-    // }
+    }
   };
 
   const pullNotificiation = type => {
-    // if (postData.authorUserName !== userData.personalData.userName) {
-    //   console.log(postData.authorUserName);
-    db.collection("users")
-      .where("personalData.userName", "==", postData.authorUserName)
-      .get()
-      .then(res => {
-        res.forEach(doc => {
-          console.log(doc.data().notifications);
-          let notificationsData = doc
-            .data()
-            .notifications.filter(
-              data =>
-                data.type !== type ||
-                data.postUrl === userData.personalData.userName
-            );
-          if (type === "likePush") {
-            if (postData.likes.length > 1) {
-              let msg = "";
-              if (postData.likes.length > 2) {
-                msg = `${postData.likes[0].likedByUserName} and ${
-                  postData.likes.length - 1
-                } liked your photo`;
-              } else {
-                msg = `${postData.likes[0].likedByUserName} liked your photo`;
+    if (postData.authorUserName !== userData.personalData.userName) {
+      db.collection("users")
+        .where("personalData.userName", "==", postData.authorUserName)
+        .get()
+        .then(res => {
+          res.forEach(doc => {
+            console.log(doc.data().notifications);
+            let notificationsData = doc
+              .data()
+              .notifications.filter(
+                data =>
+                  data.type !== type ||
+                  data.postUrl === userData.personalData.userName
+              );
+            if (type === "likePush") {
+              if (postData.likes.length > 1) {
+                let msg = "";
+                if (postData.likes.length > 2) {
+                  msg = `${postData.likes[1].likedByUserName} and ${
+                    postData.likes.length - 2
+                  } liked your photo`;
+                } else {
+                  msg = `${postData.likes[0].likedByUserName} liked your photo`;
+                }
+                const newNotifData = [
+                  ...notificationsData,
+                  {
+                    type,
+                    redirectUrl: `/p/${postData.docId}`,
+                    message: `${msg}`,
+                    byUser: postData.likes[0].likedByUserName,
+                    postUrl: postData.docId,
+                  },
+                ];
+                notificationsData = newNotifData;
               }
-              const newNotifData = [
-                ...notificationsData,
-                {
-                  type,
-                  redirectUrl: `/p/${postData.docId}`,
-                  message: `${msg}`,
-                  byUser: postData.likes[0].likedByUserName,
-                  postUrl: postData.docId,
-                },
-              ];
-              notificationsData = newNotifData;
             }
-          }
-          console.log("pull", notificationsData);
-          db.collection("users")
-            .doc(doc.id)
-            .update({
-              notifications: [...notificationsData],
-            });
+            console.log("pull", notificationsData);
+            db.collection("users")
+              .doc(doc.id)
+              .update({
+                notifications: [...notificationsData],
+              });
+          });
         });
-      });
-    // }
+    }
   };
   const addLike = () => {
     const arr = postData.likes;
@@ -167,11 +152,11 @@ function SpecificPost({ match }) {
       .doc(postData.docId)
       .update({
         likes: [
-          ...arr,
           {
             likedByProfilePicUrl: userData.personalData.profilePicUrl,
             likedByUserName: userData.personalData.userName,
           },
+          ...arr,
         ],
       });
     pushNotificiation("recently liked your post", "likePush");
@@ -190,7 +175,7 @@ function SpecificPost({ match }) {
   const addComment = e => {
     e.preventDefault();
     if (comment === "") {
-      console.log("Cant input");
+      // console.log("Cant input");
     } else {
       const comments = postData.comments;
       db.collection("posts")

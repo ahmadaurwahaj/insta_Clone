@@ -28,6 +28,8 @@
 .ProfImg {
   border-radius: 100px;
   border: 1px solid var(--primary-blue-color);
+
+  object-fit: contain;
 }
 
 .updatePhoto {

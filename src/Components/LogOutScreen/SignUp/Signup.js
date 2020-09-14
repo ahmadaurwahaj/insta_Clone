@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "../../LogOutScreen/LogoutStyle.module.css";
 import { Link } from "react-router-dom";
 import img from "../../../static/img/instaLogo.png";
@@ -11,7 +11,6 @@ function SignUp() {
   const signupError = useSelector(state => state.auth.signupError);
   const isSigningUp = useSelector(state => state.auth.isSigningUp);
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
-
   const initState = {
     email: "",
     fullName: "",
@@ -19,15 +18,33 @@ function SignUp() {
     password: "",
   };
   const [user, setUser] = useState(initState);
+  const [isValidForm, setIsValidForm] = useState(false);
 
+  const isValid = data => {
+    var format = /!@#$%^&*()+-=\[\]{};':"`\\|,.<>\/?/;
+
+    if (format.test(data.userName)) {
+      setIsValidForm(false);
+    } else {
+      if (!data.userName.includes(" ")) setIsValidForm(true);
+      else {
+        setIsValidForm(false);
+      }
+    }
+  };
   const handleChange = e => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    isValid(user);
+  }, [user]);
   const handleSubmit = e => {
     const { email, password, fullName, userName } = user;
     e.preventDefault();
     dispatch(signupUser(email, password, fullName, userName));
   };
+
   if (isAuthenticated) {
     return <Redirect to="/"></Redirect>;
   }
@@ -41,7 +58,11 @@ function SignUp() {
           <h2 className={style.subHeading}>
             Sign up to see photos and videos from your friends.
           </h2>
-          <form className={style.loginForm} onSubmit={handleSubmit}>
+          <form
+            className={style.loginForm}
+            onSubmit={handleSubmit}
+            autoComplete="off"
+          >
             <input
               className={style.input}
               id="email"
@@ -50,6 +71,7 @@ function SignUp() {
               value={user.email}
               onChange={handleChange}
               placeholder="Email"
+              autoComplete="off"
               required
             />
             <input
@@ -60,6 +82,7 @@ function SignUp() {
               value={user.fullName}
               onChange={handleChange}
               placeholder="Full Name"
+              autoComplete="off"
               required
             />
             <input
@@ -70,6 +93,7 @@ function SignUp() {
               value={user.userName}
               onChange={handleChange}
               placeholder="Username"
+              autoComplete="off"
               required
             />
 
@@ -81,9 +105,10 @@ function SignUp() {
               value={user.password}
               onChange={handleChange}
               placeholder="Password"
+              autoComplete="off"
               required
             />
-            <button type="submit" className={style.btn}>
+            <button type="submit" className={style.btn} disabled={!isValidForm}>
               Sign Up
               {isSigningUp && (
                 <img
