@@ -90,9 +90,16 @@ function SpecificPost({ match }) {
               "notifications filtered",
               msgToPush
             );
-            db.collection("users").doc(doc.id).update({
-              hello: "how are yous",
-            });
+            db.collection("users")
+              .doc(doc.id)
+              .update({
+                notifications: [
+                  {
+                    name: "Ahmad",
+                  },
+                  ...notificationsFiltered,
+                ],
+              });
           });
         });
     }
