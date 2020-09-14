@@ -23,16 +23,20 @@ function SpecificPost({ match }) {
   const [comment, setComment] = useState("");
   //   const [like, setLike] = useState(false);
   useEffect(() => {
-    db.collection("posts")
+    const unsub = db
+      .collection("posts")
       .doc(match.params.docId)
       .onSnapshot(querySnapshot => {
         if (querySnapshot.data() === undefined) {
           setDataError(true);
         } else {
-          //   console.log("data", querySnapshot.data());
           setpostData({ ...querySnapshot.data(), docId: querySnapshot.id });
         }
       });
+
+    return () => {
+      unsub();
+    };
   }, [match.params.docId]);
 
   const handleClickOpen = () => {
@@ -63,9 +67,6 @@ function SpecificPost({ match }) {
         .then(res => {
           res.forEach(doc => {
             const notificationsData = doc.data().notifications;
-            // const recentNotification = notificationsData.filter(
-            //   data => data.postUrl === postData.docId && data.type === type
-            // );
             if (type === "likePush") {
               if (postData.likes.length >= 1) {
                 msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;
@@ -82,20 +83,11 @@ function SpecificPost({ match }) {
             notificationsFiltered = notificationsData.filter(
               data => data.postUrl !== postData.docId || data.type !== type
             );
-            db.collection("users")
-              .doc(doc.id)
-              .update({
-                notifications: [
-                  {
-                    type,
-                    redirectUrl: `/p/${postData.docId}`,
-                    message: `${msgToPush}`,
-                    byUser: userData.personalData.userName,
-                    postUrl: postData.docId,
-                  },
-                  ...notificationsFiltered,
-                ],
-              });
+
+            console.log(notificationsFiltered, "notifications filtered");
+            db.collection("users").doc(doc.id).update({
+              hello: "how are yous",
+            });
           });
         });
     }
@@ -195,7 +187,7 @@ function SpecificPost({ match }) {
         })
         .then(res => {
           setComment("");
-          pushNotificiation("recently commmented on your post", "commentPush");
+          // pushNotificiation("recently commmented on your post", "commentPush");
         });
     }
   };
@@ -265,37 +257,41 @@ function SpecificPost({ match }) {
               </Link>
             </div>
 
-            <div className={style.commentSection}>
-              {postData.comments.map(
-                (data, index) => (
-                  <div key={index} className={style.singComment}>
-                    <div className={style.innerCommentSection}>
-                      <Link
-                        to={`/accounts/${data.commentAuthorName}`}
-                        className={style.authorData}
-                      >
-                        <img
-                          src={data.commentAuthorImg}
-                          alt=""
-                          className={style.commentImg}
-                        ></img>
-                      </Link>
-                      <div className={style.commentDetails}>
-                        <Link to={`/accounts/${data.commentAuthorName}`}>
-                          <span className={style.commentAuthorName}>
-                            {data.commentAuthorName}
-                          </span>
-                        </Link>
-                        <span className={style.commentContent}>
-                          {data.commentContent}
-                        </span>
+            {postData.comments.length > 0 && (
+              <>
+                <div className={style.commentSection}>
+                  {postData.comments.map(
+                    (data, index) => (
+                      <div key={index} className={style.singComment}>
+                        <div className={style.innerCommentSection}>
+                          <Link
+                            to={`/accounts/${data.commentAuthorName}`}
+                            className={style.authorData}
+                          >
+                            <img
+                              src={data.commentAuthorImg}
+                              alt=""
+                              className={style.commentImg}
+                            ></img>
+                          </Link>
+                          <div className={style.commentDetails}>
+                            <Link to={`/accounts/${data.commentAuthorName}`}>
+                              <span className={style.commentAuthorName}>
+                                {data.commentAuthorName}
+                              </span>
+                            </Link>
+                            <span className={style.commentContent}>
+                              {data.commentContent}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ),
-                []
-              )}
-            </div>
+                    ),
+                    []
+                  )}
+                </div>
+              </>
+            )}
             <div className={style.reactDiv}>
               {isLiked(postData.likes) ? (
                 <HeartFill

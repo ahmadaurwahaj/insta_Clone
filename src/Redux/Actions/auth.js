@@ -186,21 +186,22 @@ export const getCurrentUserData = user => dispatch => {
   } else {
     uid = user.uid;
   }
-  db.collection("users")
-    .where("personalData.uid", "==", uid)
-    // .get()
-    // .catch(err => dispatch(retrievingDataError()));
-    .onSnapshot(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        // console.log("snapshot");
-        dispatch(
-          retrievedUserData({
-            userData: doc.data(),
-            docId: doc.id,
-          })
-        );
+
+  if (uid === myFirebase.auth().currentUser.uid) {
+    db.collection("users")
+      .where("personalData.uid", "==", uid)
+      .onSnapshot(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          console.log("snapshot", doc.data());
+          dispatch(
+            retrievedUserData({
+              userData: doc.data(),
+              docId: doc.id,
+            })
+          );
+        });
       });
-    });
+  }
   // .then(snapshot => {
   //   console.log("from getting snapshot", snapshot.docs[0].data());
   //   dispatch(

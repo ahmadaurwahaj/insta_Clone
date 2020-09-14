@@ -70,6 +70,18 @@ function Profile({ user, match, selfProfile, docId }) {
     const notifications = user.notifications;
 
     db.collection("users")
+      .doc(docRef)
+      .update({
+        following: [
+          ...selfFollowing,
+          {
+            followingUserName: user.personalData.userName,
+            followingPicUrl: user.personalData.profilePicUrl,
+          },
+        ],
+      });
+
+    db.collection("users")
       .doc(docId)
       .update({
         followers: [
@@ -87,18 +99,6 @@ function Profile({ user, match, selfProfile, docId }) {
             type: "followPush",
           },
           ...notifications,
-        ],
-      });
-
-    db.collection("users")
-      .doc(docRef)
-      .update({
-        following: [
-          ...selfFollowing,
-          {
-            followingUserName: user.personalData.userName,
-            followingPicUrl: user.personalData.profilePicUrl,
-          },
         ],
       });
   };

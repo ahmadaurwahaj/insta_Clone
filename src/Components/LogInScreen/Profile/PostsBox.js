@@ -5,20 +5,18 @@ import { db } from "../../../Firebase/firebase";
 function PostsBox({ posts }) {
   const [postData, setPostData] = useState([]);
   const [noData, setNoData] = useState(false);
-
   useEffect(() => {
     if (posts.length > 0) {
       let arr = [];
-      posts.forEach(data =>
-        db
-          .collection("posts")
+      posts.forEach(data => {
+        db.collection("posts")
           .doc(data.ref)
           .get()
           .then(res => {
             arr.push({ ...res.data(), postId: res.id });
-            setPostData(arr);
-          })
-      );
+            setPostData([...arr]);
+          });
+      });
     } else {
       setNoData(true);
     }
@@ -33,7 +31,6 @@ function PostsBox({ posts }) {
               <Link to={`/p/${data.postId}`}>
                 <img src={data.mediaUrl} className={style.postMedia} alt="" />
               </Link>
-              {/* <>{console.log(data.postId)}</> */}
             </div>
           ),
           []
