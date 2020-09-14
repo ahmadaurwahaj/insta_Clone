@@ -3,8 +3,9 @@ import style from "./SpecificPost.module.css";
 import { db } from "../../../Firebase/firebase";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import Modal from "./../Modal/Modal";
-// import firebase from "firebase/app";
+
 import {
   BsBookmark as Bookmark,
   BsBookmarkCheck as Bookmarked,

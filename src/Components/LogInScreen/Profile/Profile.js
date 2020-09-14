@@ -6,7 +6,7 @@ import NavLinks from "./ProfileMediaHeader";
 import { useSelector } from "react-redux";
 import { db } from "../../../Firebase/firebase";
 
-// import Modal from "./../Modal/Modal";
+import Modal from "../Modal/Modal";
 
 function Profile({ user, match, selfProfile, docId }) {
   const numOfPosts = user.posts.length;
@@ -123,30 +123,20 @@ function Profile({ user, match, selfProfile, docId }) {
                 <strong>{numOfPosts}</strong> posts
               </h1>
               <h1>
-                {numOfFollowers > 0 ? (
-                  <strong
-                    onClick={handleOpen("followModal")}
-                    className={style.modalBtn}
-                  >
-                    {numOfFollowers}
-                  </strong>
-                ) : (
-                  <strong>{numOfFollowers}</strong>
-                )}{" "}
-                followers
+                <span
+                  onClick={() => handleOpen("followingModal")}
+                  className={style.modalBtn}
+                >
+                  <strong>{numOfFollowers}</strong> followers
+                </span>
               </h1>
               <h1>
-                {numOfFollowing > 0 ? (
-                  <strong
-                    onClick={() => handleOpen("followingModal")}
-                    className={style.modalBtn}
-                  >
-                    {numOfFollowing}
-                  </strong>
-                ) : (
-                  <strong>{numOfFollowing}</strong>
-                )}{" "}
-                following
+                <span
+                  onClick={() => handleOpen("followingModal")}
+                  className={style.modalBtn}
+                >
+                  <strong>{numOfFollowing}</strong> following
+                </span>
               </h1>
             </div>
             <div className={style.nameBioContainer}>
@@ -169,21 +159,22 @@ function Profile({ user, match, selfProfile, docId }) {
           )}
         </div>
       </div>
-      {/* <Modal
+
+      <Modal
+        heading="Following"
+        modalData={user.following}
+        userNameKey="followingUserName"
+        profilePicKey="followingPicUrl"
+        modalOpen={modalOpen.followingModal}
+        handleClose={() => handleClose("followingModal")}
+      />
+      <Modal
         heading="Followers"
         modalData={user.followers}
         userNameKey="followerUserName"
         profilePicKey="followerPicUrl"
         modalOpen={modalOpen.followModal}
         handleClose={() => handleClose("followModal")}
-      /> */}
-      {/* <Modal
-        heading="Following"
-        modalData={user.following}
-        userNameKey="followingUserName"
-        profilePicKey="followingPicUrl"
-        modalOpen={modalOpen.followingModal}
-        handleClose={() => handleClose("followingModal")} */}
       />
     </div>
   );

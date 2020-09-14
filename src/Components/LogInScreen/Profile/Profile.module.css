@@ -14,6 +14,9 @@
   max-width: 800px;
 }
 
+.modalBtn {
+  cursor: pointer;
+}
 .innerProfileContainer {
   width: 100%;
   display: flex;
