@@ -5,7 +5,9 @@ import { db } from "../../../Firebase/firebase";
 function PostsBox({ posts }) {
   const [postData, setPostData] = useState([]);
   const [noData, setNoData] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   useEffect(() => {
+    setLoadingData(true);
     if (posts.length > 0) {
       let arr = [];
       posts.forEach(data => {
@@ -15,6 +17,7 @@ function PostsBox({ posts }) {
           .then(res => {
             arr.push({ ...res.data(), postId: res.id });
             setPostData([...arr]);
+            setLoadingData(false);
           });
       });
     } else {
@@ -24,19 +27,29 @@ function PostsBox({ posts }) {
 
   return (
     <div className={style.postBoxWrapper}>
-      {postData.length > 0 ? (
-        postData.map(
-          (data, index) => (
-            <div key={index} className={style.singleMediaItem}>
-              <Link to={`/p/${data.postId}`}>
-                <img src={data.mediaUrl} className={style.postMedia} alt="" />
-              </Link>
-            </div>
-          ),
-          []
-        )
+      {loadingData ? (
+        <h1>Loading Data</h1>
       ) : (
-        <>{noData && <h3 className={style.postMsg}>No Posts</h3>}</>
+        <>
+          {postData.length > 0 ? (
+            postData.map(
+              (data, index) => (
+                <div key={index} className={style.singleMediaItem}>
+                  <Link to={`/p/${data.postId}`}>
+                    <img
+                      src={data.mediaUrl}
+                      className={style.postMedia}
+                      alt=""
+                    />
+                  </Link>
+                </div>
+              ),
+              []
+            )
+          ) : (
+            <>{noData && <h3 className={style.postMsg}>No Posts</h3>}</>
+          )}
+        </>
       )}
     </div>
   );

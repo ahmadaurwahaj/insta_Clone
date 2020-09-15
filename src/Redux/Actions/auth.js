@@ -165,7 +165,7 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
                 saved: [],
               })
               .catch(err => console.log(err));
-            dispatch(getCurrentUserData(user, "called from signup"));
+            // dispatch(getCurrentUserData(user, "called from signup"));
           })
           .catch(error => {
             dispatch(signupError(error.message));
@@ -187,6 +187,7 @@ export const getCurrentUserData = (user, msg) => dispatch => {
     uid = user.uid;
   }
 
+  console.log(msg);
   if (uid === myFirebase.auth().currentUser.uid) {
     db.collection("users")
       .where("personalData.uid", "==", uid)

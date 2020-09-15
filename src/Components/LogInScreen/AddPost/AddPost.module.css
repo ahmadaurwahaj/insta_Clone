@@ -26,11 +26,64 @@
 }
 
 .mainPostArea {
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.dataInputArea {
   padding: 10px;
   box-sizing: border-box;
+}
+
+.footerDiv {
+  background: var(--bg-color);
+  border-top: 1px solid var(--box-border-color);
+  padding: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .caption {
   width: 99%;
   border: 0px;
+}
+
+.fileName {
+  margin-left: 10px;
+  font-size: 12px;
+  width: 80%;
+  overflow-x: scroll;
+}
+.updatePhoto {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-blue-color);
+}
+.btn {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 16px;
+  cursor: pointer;
+  right: 0;
+  background: var(--primary-blue-color);
+  color: #fff;
+  border: 0px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.errorMsg {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.loaderImg {
+  margin-left: 4px;
+}
+.progress {
+  width: 50%;
+  z-index: 999;
+  border-radius: 2px;
+  margin-left: 10px;
 }

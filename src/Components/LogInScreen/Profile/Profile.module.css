@@ -1,14 +1,14 @@
 .mainWrapper {
   margin-top: 90px;
   display: flex;
-  width: 100vw;
+  width: 100%;
   flex-direction: column;
   align-items: center;
   z-index: 999;
 }
 
 .profileWrapper {
-  width: 60vw;
+  width: 60%;
   display: flex;
   flex-direction: row;
   max-width: 800px;
@@ -27,7 +27,6 @@
 .detailsDiv {
   display: flex;
   flex-direction: column;
-
   justify-content: space-around;
 }
 
@@ -147,7 +146,11 @@
 
 .postMedia {
   width: 100%;
-  height: auto;
+  height: 24.4vw;
+  min-height: 200px;
+  max-height: 300px;
+  object-fit: contain;
+  border: 1px solid var(--box-border-color);
 }
 
 .postMsg {
@@ -161,12 +164,26 @@
 .modalBtn {
   cursor: pointer;
 }
-@media only screen and (max-width: 768px) {
-  .profileWrapper {
-    max-width: 100vw;
+
+@media only screen and (max-width: 990px) {
+  .mediaDisplayDiv {
     width: 100vw;
-    display: flex;
-    flex-wrap: wrap;
+    max-width: 100vw;
+  }
+  .profileWrapper {
+    width: 80%;
+    max-width: 100%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .postBoxWrapper {
+    width: 100%;
+  }
+  .profileWrapper {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
   }
 
   .innerProfileContainer {
@@ -201,19 +218,25 @@
     display: flex;
     justify-content: space-around;
     padding: 16px;
-    border: 1px solid var(--box-border-color);
+    border-top: 1px solid var(--box-border-color);
+    border-bottom: 1px solid var(--box-border-color);
     width: 100%;
-    margin: 10px;
+    margin: 10px 0px;
+    box-sizing: border-box;
   }
   .nameEdit,
   .followDetails {
     margin-bottom: 20px;
+    display: flex;
+    min-width: 0px;
+    flex-wrap: wrap;
   }
 
   .nameBioContainer {
     align-items: flex-start;
     width: 100%;
     padding-left: 20px;
+    box-sizing: border-box;
   }
 
   .nameBioContainer h1 {
@@ -222,20 +245,40 @@
   }
 }
 
-@media only screen and (max-width: 990px) {
-  .mediaDisplayDiv {
-    width: 100vw;
-    max-width: 100vw;
-  }
-
-  .postBoxWrapper {
-    width: 100%;
-    max-width: 100%;
-  }
-}
-
 @media only screen and (max-width: 450px) {
   .singleMediaItem {
-    width: 45%;
+    width: 100%;
+  }
+  .postBoxWrapper {
+    width: 110%;
+    max-width: 100%;
+  }
+  .postMedia {
+    height: auto;
+    max-height: auto;
+  }
+}
+@media only screen and (max-width: 320px) {
+  .detailsDiv {
+    display: flex;
+    min-width: 0px;
+  }
+
+  .nameEdit {
+    min-width: 0px;
+    display: flex;
+    margin-left: 0px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    /* box-sizing: border-box; */
+  }
+
+  .editProfile {
+    font-weight: 500;
+    font-size: 13px;
+  }
+  .userName {
+    font-size: max(6vw, 15px);
   }
 }

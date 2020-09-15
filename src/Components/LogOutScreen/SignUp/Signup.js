@@ -21,15 +21,13 @@ function SignUp() {
   const [isValidForm, setIsValidForm] = useState(false);
 
   const isValid = data => {
-    var format = /!@#$%^&*()+-=\[\]{};':"`\\|,.<>\/?/;
+    var format = /^([a-zA-Z0-9_-]+)$/;
 
-    if (format.test(data.userName)) {
+    console.log(format.test(data.userName));
+    if (!format.test(data.userName)) {
       setIsValidForm(false);
     } else {
-      if (!data.userName.includes(" ")) setIsValidForm(true);
-      else {
-        setIsValidForm(false);
-      }
+      setIsValidForm(true);
     }
   };
   const handleChange = e => {

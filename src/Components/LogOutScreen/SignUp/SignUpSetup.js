@@ -3,6 +3,7 @@ import style from "./SignupSetUp.module.css";
 import ProfilePhoto from "./../../../static/img/profilePhoto.png";
 import { db, storage } from "../../../Firebase/firebase";
 // import Loader from "../../../static/img/loader.gif";
+import crypto from "crypto";
 import { useSelector } from "react-redux";
 function SignUpSetup() {
   const initState = {
@@ -11,6 +12,7 @@ function SignUpSetup() {
   };
 
   const docRef = useSelector(state => state.auth.docRef);
+  const user = useSelector(state => state.auth.userData);
   // const user = useSelector(state => state.auth.userData);
   const [userData, setuserData] = useState(initState);
   const [displayPic, setDisplayPic] = useState(null);
@@ -47,13 +49,16 @@ function SignUpSetup() {
   const updateImg = profilePicUrl => {
     // console.log("image update");
     if (profilePicUrl.type.includes("image")) {
-      //   console.log("in updating img");
-      const uploadTask = storage
-        .ref(`images/${profilePicUrl.name}`)
-        .put(profilePicUrl);
+      const uuid = `${user.personalData.userName}-${
+        profilePicUrl.name
+      }-${crypto.randomBytes(16).toString("hex")}`;
+      const uploadTask = storage.ref(`images/${uuid}`).put(profilePicUrl);
+
       uploadTask.on(
         "state_changed",
-        snapshot => {},
+        snapshot => {
+          console.log(snapshot.bytesTransferred);
+        },
         error => {
           setErrorMsg(error);
           setIsUpdating(false);
@@ -61,7 +66,7 @@ function SignUpSetup() {
         () => {
           storage
             .ref("images")
-            .child(profilePicUrl.name)
+            .child(uuid)
             .getDownloadURL()
             .then(url => {
               //   console.log(url);

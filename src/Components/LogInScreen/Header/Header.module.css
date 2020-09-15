@@ -1,6 +1,6 @@
 .headerMainWrapper {
   background: var(--box-bg-color);
-  /* width: 100%; */
+  width: 100%;
   height: auto;
   padding: 12px 10px 10px;
   /* padding: 10px; */
@@ -155,12 +155,14 @@
   .headerMainWrapper {
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+    /* width: 100%; */
+    margin: 0px;
   }
   .headerInnerWrapper {
-    width: 94%;
+    width: 94vw;
     padding: 0px 0px;
     display: flex;
-    margin-left: -20px;
   }
   .searchDiv {
     display: none;
