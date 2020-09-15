@@ -5,12 +5,11 @@ import { withRouter } from "react-router";
 
 function Search({ history }) {
   const [search, setSearch] = useState("");
-  const [isOk, setIsOk] = useState(false);
   const handleSubmit = e => {
     e.preventDefault();
-
     if (search !== "") {
       history.push(`/search/${search}`);
+      setSearch("");
     }
   };
 
