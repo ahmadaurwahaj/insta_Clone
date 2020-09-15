@@ -12,6 +12,7 @@ import Profile from "./Components/LogInScreen/Profile/Profile";
 import SpecificPost from "./Components/LogInScreen/SpecificPost/SpecificPost";
 import { useSelector, useDispatch } from "react-redux";
 import Account from "./Components/LogInScreen/Accounts/Accounts";
+import Search from "./Components/LogInScreen/UserSearch/UserSearh";
 import "./App.css";
 import { getCurrentUserData } from "./Redux/Actions/auth";
 
@@ -78,6 +79,16 @@ function App(props) {
         path="/accounts/:id"
         exact
         component={Account}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+        user={userData}
+        retrieveSuccess={retrieveSuccess}
+        isNewUser={userData}
+      />
+      <ProtectedRoute
+        path="/search/:userName"
+        exact
+        component={Search}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
         user={userData}

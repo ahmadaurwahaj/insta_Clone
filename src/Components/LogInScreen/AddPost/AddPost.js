@@ -123,10 +123,9 @@ function AddPost() {
         () => {
           storage
             .ref("images")
-            .child(profilePicUrl.name)
+            .child(uuid)
             .getDownloadURL()
             .then(url => {
-              //   console.log(url);
               setShowProgress(false);
               setProgress(0);
               updateData(url);
@@ -148,6 +147,11 @@ function AddPost() {
               <textarea
                 className={style.caption}
                 placeholder="Caption..."
+                name="caption"
+                value={userData.caption}
+                onChange={e =>
+                  setuserData({ ...userData, caption: e.target.value })
+                }
               ></textarea>
 
               <input

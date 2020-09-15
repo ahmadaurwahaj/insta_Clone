@@ -4,6 +4,7 @@ import { db, storage } from "../../../Firebase/firebase";
 import { useSelector } from "react-redux";
 import { myFirebase } from "../../../Firebase/firebase";
 import loadingImg from "../../../static/img/loader.gif";
+import crypto from "crypto";
 // import { getCurrentUserData } from "../../../Redux/Actions/auth";
 
 export default function Settings({ user }) {
@@ -20,6 +21,7 @@ export default function Settings({ user }) {
   };
 
   const docRef = useSelector(state => state.auth.docRef);
+  const userLocal = useSelector(state => state.auth.userData);
   const [userData, setuserData] = useState(profileData);
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -106,9 +108,10 @@ export default function Settings({ user }) {
     if (profilePicUrl === user.personalData.profilePicUrl) {
       updateData();
     } else if (profilePicUrl.type.includes("image")) {
-      const uploadTask = storage
-        .ref(`images/${profilePicUrl.name}`)
-        .put(profilePicUrl);
+      const uuid = `${userLocal.personalData.userName}-${
+        profilePicUrl.name
+      }-${crypto.randomBytes(16).toString("hex")}`;
+      const uploadTask = storage.ref(`images/${uuid}`).put(profilePicUrl);
       uploadTask.on(
         "state_changed",
         snapshot => {},
@@ -119,7 +122,7 @@ export default function Settings({ user }) {
         () => {
           storage
             .ref("images")
-            .child(profilePicUrl.name)
+            .child(uuid)
             .getDownloadURL()
             .then(url => {
               updateData(url);

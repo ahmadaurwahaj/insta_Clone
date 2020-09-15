@@ -22,6 +22,7 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
+    "retext-keywords": "^6.0.0",
     "uuid": "^8.3.0"
   },
   "scripts": {

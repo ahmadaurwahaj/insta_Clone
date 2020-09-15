@@ -6,6 +6,7 @@ import { signupUser } from "../../../Redux/Actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import loader from "../../../static/img/loader.gif";
 import { Redirect } from "react-router-dom";
+import { generateKeywords } from "./keywordGenerator";
 function SignUp() {
   const dispatch = useDispatch();
   const signupError = useSelector(state => state.auth.signupError);
@@ -22,12 +23,16 @@ function SignUp() {
 
   const isValid = data => {
     var format = /^([a-zA-Z0-9_-]+)$/;
+    var formatForName = /^[a-zA-Z\s]+$/;
 
-    console.log(format.test(data.userName));
-    if (!format.test(data.userName)) {
-      setIsValidForm(false);
-    } else {
+    if (
+      format.test(data.userName) &&
+      formatForName.test(data.fullName) &&
+      data.fullName.includes(" ")
+    ) {
       setIsValidForm(true);
+    } else {
+      setIsValidForm(false);
     }
   };
   const handleChange = e => {
@@ -37,15 +42,27 @@ function SignUp() {
   useEffect(() => {
     isValid(user);
   }, [user]);
+
   const handleSubmit = e => {
-    const { email, password, fullName, userName } = user;
     e.preventDefault();
-    dispatch(signupUser(email, password, fullName, userName));
+    const { email, password, fullName, userName } = user;
+    let keywords = fullName.toLowerCase().split(" ");
+    if (keywords.length === 1) {
+      keywords = [...keywords, "", "", ""];
+    }
+    if (keywords.length === 2) {
+      keywords = [keywords[0], "", keywords[1], ""];
+    } else if (keywords.length === 3) {
+      keywords = [...keywords, ""];
+    }
+    keywords = generateKeywords(keywords);
+    dispatch(signupUser(email, password, fullName, userName, keywords));
   };
 
   if (isAuthenticated) {
     return <Redirect to="/"></Redirect>;
   }
+
   return (
     <div className={style.signInMainWrapper}>
       <div className={style.signInInnerWrapper}>

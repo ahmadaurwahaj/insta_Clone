@@ -1,9 +1,21 @@
 import React, { useState } from "react";
 import style from "./Header.module.css";
-function Search() {
+
+import { withRouter } from "react-router";
+
+function Search({ history }) {
   const [search, setSearch] = useState("");
+  const [isOk, setIsOk] = useState(false);
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if (search !== "") {
+      history.push(`/search/${search}`);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Search"
@@ -15,4 +27,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default withRouter(Search);

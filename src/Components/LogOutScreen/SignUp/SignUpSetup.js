@@ -13,7 +13,6 @@ function SignUpSetup() {
 
   const docRef = useSelector(state => state.auth.docRef);
   const user = useSelector(state => state.auth.userData);
-  // const user = useSelector(state => state.auth.userData);
   const [userData, setuserData] = useState(initState);
   const [displayPic, setDisplayPic] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
@@ -76,6 +75,7 @@ function SignUpSetup() {
       );
     }
   };
+
   const handleImg = e => {
     setShouldUpdate(true);
     const image = e.target.files[0];

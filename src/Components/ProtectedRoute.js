@@ -24,7 +24,7 @@ const ProtectedRoute = ({
                 <SetupProfile />
               ) : (
                 <>
-                  <Header></Header>
+                  <Header {...props}></Header>
                   <Component {...props} {...rest} />
                 </>
               )}

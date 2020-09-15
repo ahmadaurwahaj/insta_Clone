@@ -133,7 +133,13 @@ export const logoutUser = () => dispatch => {
       dispatch(logoutError());
     });
 };
-export const signupUser = (email, password, fullName, userName) => dispatch => {
+export const signupUser = (
+  email,
+  password,
+  fullName,
+  userName,
+  keywords
+) => dispatch => {
   dispatch(requestSignup());
   db.collection("users")
     .where("personalData.userName", "==", userName)
@@ -147,10 +153,11 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
             dispatch(receiveSignup(user));
             db.collection("users")
               .add({
+                keywords,
                 personalData: {
                   uid: user.user.uid,
                   fullName,
-                  userName,
+                  userName: userName.toLowerCase(),
                   email: user.user.email,
                   phoneNumber: "",
                   website: "",
@@ -163,6 +170,7 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
                 posts: [],
                 notifications: [],
                 saved: [],
+                newNotification: false,
               })
               .catch(err => console.log(err));
             // dispatch(getCurrentUserData(user, "called from signup"));
