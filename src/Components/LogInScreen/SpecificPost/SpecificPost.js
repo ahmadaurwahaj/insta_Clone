@@ -21,7 +21,6 @@ function SpecificPost({ match }) {
   const docRef = useSelector(state => state.auth.docRef);
   const [modalOpen, setModalOpen] = useState(false);
   const [comment, setComment] = useState("");
-  //   const [like, setLike] = useState(false);
   useEffect(() => {
     const unsub = db
       .collection("posts")
@@ -58,6 +57,7 @@ function SpecificPost({ match }) {
   };
 
   const pushNotificiation = (msg, type) => {
+    let msgToPush = "";
     let notificationsFiltered = null;
     if (postData.authorUserName !== userData.personalData.userName) {
       db.collection("users")
@@ -66,8 +66,6 @@ function SpecificPost({ match }) {
         .then(res => {
           res.forEach(doc => {
             const notificationsData = doc.data().notifications;
-            let msgToPush = "";
-            msgToPush = "hello";
             if (type === "likePush") {
               if (postData.likes.length >= 1) {
                 msgToPush = `${userData.personalData.userName} and ${postData.likes.length} others ${msg}`;
@@ -84,18 +82,16 @@ function SpecificPost({ match }) {
             notificationsFiltered = notificationsData.filter(
               data => data.postUrl !== postData.docId || data.type !== type
             );
-
-            console.log(
-              notificationsFiltered,
-              "notifications filtered",
-              msgToPush
-            );
             db.collection("users")
               .doc(doc.id)
               .update({
                 notifications: [
                   {
-                    name: "Ahmad",
+                    type,
+                    redirectUrl: `/p/${postData.docId}`,
+                    message: `${msgToPush}`,
+                    byUser: userData.personalData.userName,
+                    postUrl: postData.docId,
                   },
                   ...notificationsFiltered,
                 ],
@@ -112,7 +108,6 @@ function SpecificPost({ match }) {
         .get()
         .then(res => {
           res.forEach(doc => {
-            console.log(doc.data().notifications);
             let notificationsData = doc
               .data()
               .notifications.filter(
@@ -143,7 +138,7 @@ function SpecificPost({ match }) {
                 notificationsData = newNotifData;
               }
             }
-            console.log("pull", notificationsData);
+
             db.collection("users")
               .doc(doc.id)
               .update({
@@ -199,7 +194,7 @@ function SpecificPost({ match }) {
         })
         .then(res => {
           setComment("");
-          // pushNotificiation("recently commmented on your post", "commentPush");
+          pushNotificiation("recently commmented on your post", "commentPush");
         });
     }
   };

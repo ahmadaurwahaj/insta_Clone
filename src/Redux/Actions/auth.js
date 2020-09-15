@@ -112,7 +112,7 @@ export const loginUser = (email, password) => dispatch => {
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(user => {
-      dispatch(getCurrentUserData(user));
+      // dispatch(getCurrentUserData(user, "called from login"));
       dispatch(receiveLogin(user));
     })
     .catch(error => {
@@ -165,7 +165,7 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
                 saved: [],
               })
               .catch(err => console.log(err));
-            dispatch(getUserData(user));
+            dispatch(getCurrentUserData(user, "called from signup"));
           })
           .catch(error => {
             dispatch(signupError(error.message));
@@ -177,7 +177,7 @@ export const signupUser = (email, password, fullName, userName) => dispatch => {
     });
 };
 
-export const getCurrentUserData = user => dispatch => {
+export const getCurrentUserData = (user, msg) => dispatch => {
   dispatch(getUserData());
 
   let uid = "";
@@ -192,13 +192,16 @@ export const getCurrentUserData = user => dispatch => {
       .where("personalData.uid", "==", uid)
       .onSnapshot(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          console.log("snapshot", doc.data());
-          dispatch(
-            retrievedUserData({
-              userData: doc.data(),
-              docId: doc.id,
-            })
-          );
+          if (
+            doc.data().personalData.uid === myFirebase.auth().currentUser.uid
+          ) {
+            dispatch(
+              retrievedUserData({
+                userData: doc.data(),
+                docId: doc.id,
+              })
+            );
+          }
         });
       });
   }

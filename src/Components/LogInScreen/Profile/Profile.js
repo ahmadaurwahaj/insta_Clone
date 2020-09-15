@@ -42,7 +42,6 @@ function Profile({ user, match, selfProfile, docId }) {
   };
 
   const removeFollow = () => {
-    // console.log("hello from remove");
     const selfFollowing = userData.following.filter(
       data => data.followingUserName !== user.personalData.userName
     );

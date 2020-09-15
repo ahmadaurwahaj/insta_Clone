@@ -24,7 +24,7 @@ function App(props) {
   const userData = useSelector(state => state.auth.userData);
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(getCurrentUserData(user));
+      dispatch(getCurrentUserData(user, "called from app.js"));
     }
     // return () => {
     //   unsub();
