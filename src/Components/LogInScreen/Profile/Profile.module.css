@@ -130,7 +130,7 @@
 .postBoxWrapper {
   align-self: center;
   width: 100%;
-  max-width: 100%px;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -138,6 +138,11 @@
   align-items: center;
 }
 
+.loaderImg {
+  align-self: center;
+  justify-self: center;
+  margin: 10px auto;
+}
 .singleMediaItem {
   display: flex;
   width: 30%;

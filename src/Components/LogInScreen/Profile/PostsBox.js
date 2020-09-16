@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import style from "./Profile.module.css";
 import { Link } from "react-router-dom";
 import { db } from "../../../Firebase/firebase";
+import darkLoader from "../../../static/img/darkLoader.gif";
 function PostsBox({ posts }) {
   const [postData, setPostData] = useState([]);
   const [noData, setNoData] = useState(false);
@@ -15,20 +16,27 @@ function PostsBox({ posts }) {
           .doc(data.ref)
           .get()
           .then(res => {
+            setLoadingData(false);
             arr.push({ ...res.data(), postId: res.id });
             setPostData([...arr]);
-            setLoadingData(false);
           });
       });
     } else {
       setNoData(true);
+      setLoadingData(false);
     }
   }, [posts]);
 
   return (
     <div className={style.postBoxWrapper}>
       {loadingData ? (
-        <h1>Loading Data</h1>
+        <img
+          src={darkLoader}
+          width="50px"
+          height="50px"
+          className={style.loaderImg}
+          alt=""
+        ></img>
       ) : (
         <>
           {postData.length > 0 ? (

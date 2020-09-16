@@ -7,8 +7,6 @@ import { useSelector } from "react-redux";
 // import { db } from "../../../Firebase/firebase";
 function Header({ history }) {
   const userData = useSelector(state => state.auth.userData);
-  // console.log("header", userData);
-  console.log("history from head", history);
   return (
     <div className={style.headerMainWrapper}>
       <div className={style.headerInnerWrapper}>

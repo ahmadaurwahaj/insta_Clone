@@ -142,20 +142,32 @@ function Profile({ user, match, selfProfile, docId }) {
                 <strong>{numOfPosts}</strong> posts
               </h1>
               <h1>
-                <span
-                  onClick={() => handleOpen("followingModal")}
-                  className={style.modalBtn}
-                >
-                  <strong>{numOfFollowers}</strong> followers
-                </span>
+                {user.followers.length > 0 ? (
+                  <span
+                    onClick={() => handleOpen("followModal")}
+                    className={style.modalBtn}
+                  >
+                    <strong>{numOfFollowers}</strong> followers
+                  </span>
+                ) : (
+                  <span className={style.modalBtn}>
+                    <strong>{numOfFollowers}</strong> followers
+                  </span>
+                )}
               </h1>
               <h1>
-                <span
-                  onClick={() => handleOpen("followingModal")}
-                  className={style.modalBtn}
-                >
-                  <strong>{numOfFollowing}</strong> following
-                </span>
+                {numOfFollowing > 0 ? (
+                  <span
+                    onClick={() => handleOpen("followingModal")}
+                    className={style.modalBtn}
+                  >
+                    <strong>{numOfFollowing}</strong> following
+                  </span>
+                ) : (
+                  <span className={style.modalBtn}>
+                    <strong>{numOfFollowing}</strong> following
+                  </span>
+                )}
               </h1>
             </div>
             <div className={style.nameBioContainer}>
