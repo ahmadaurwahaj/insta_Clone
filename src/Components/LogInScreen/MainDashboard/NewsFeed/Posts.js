@@ -101,7 +101,11 @@ function Posts({ followingUsers }) {
       const progressBarFunction = () => {
         if (
           document.documentElement.scrollHeight - window.innerHeight ===
-          window.scrollY
+            parseInt(window.scrollY) ||
+          document.documentElement.scrollHeight - window.innerHeight ===
+            parseInt(window.scrollY) + 1 ||
+          document.documentElement.scrollHeight - window.innerHeight ===
+            parseInt(window.scrollY) - 1
         ) {
           getPostDataNextTime();
         }
