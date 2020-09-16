@@ -1,69 +1,145 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import style from "./Posts.module.css";
+import SinglePost from "./SinglePost";
+import { useSelector } from "react-redux";
+import { db } from "../../../../Firebase/firebase";
+import darkLoad from "../../../../static/img/darkLoader.gif";
+function Posts() {
+  const [posts, setPosts] = useState([]);
+  const [loadingData, setloadingData] = useState(true);
+  const [error, setError] = useState(false);
+  const userData = useSelector(state => state.auth.userData);
 
-import {
-  BsBookmark as Bookmark,
-  BsHeart as Heart,
-  BsChatSquare as Comment,
-} from "react-icons/bs";
-// import { FaRegComment as Comment } from "react-icons/fa";
-// import { VscComment as Comment } from "react-icons/vsc";
-function Posts({ type = "video" }) {
+  const limit = 4;
+  let lastNameOfPerson = "";
+  let reachedEnd = false;
+  const ref = useRef(lastNameOfPerson);
+  const reachedEndRef = useRef(reachedEnd);
+  const dataExtracted = useRef(0);
+  // const followingSliced = useRef();
+  const following = [];
+  userData.following.forEach(data => following.push(data.followingUserName));
+
+  let followingSliced = following.slice(0, 10);
+  useEffect(() => {
+    if (followingSliced.length > 0) {
+      setloadingData(true);
+      ref.current = "";
+      reachedEndRef.current = false;
+
+      const getPostDataFirstTime = () => {
+        const arr = [];
+        db.collection("posts")
+          .where("authorUserName", "in", followingSliced)
+          .orderBy("timeStamp")
+          .limit(limit)
+          .get()
+          .then(res => {
+            setloadingData(false);
+            res.forEach(data => {
+              arr.push(data.data());
+              console.log(arr, posts, "firstTime");
+              if (data.data() !== undefined) {
+                setPosts(oldPosts => [
+                  ...oldPosts,
+                  { ...data.data(), postId: data.id },
+                ]);
+              }
+            });
+            if (arr.length !== 0) {
+              ref.current = arr[arr.length - 1].timeStamp;
+            } else {
+              dataExtracted.current += 10;
+              if (posts.length === 0) {
+                setError(true);
+              }
+              if (dataExtracted.current >= following.length) {
+                reachedEndRef.current = true;
+              } else {
+                followingSliced = following.slice(
+                  dataExtracted.current,
+                  dataExtracted.current + 10
+                );
+              }
+            }
+          })
+          .catch(err => console.log(err));
+      };
+
+      getPostDataFirstTime();
+      const getPostDataNextTime = () => {
+        const arr = [];
+        if (!reachedEndRef.current) {
+          console.log("here", ref.current);
+          db.collection("posts")
+            .where("authorUserName", "in", followingSliced)
+            .orderBy("timeStamp")
+            .startAfter(ref.current)
+            .limit(limit)
+            .get()
+            .then(res => {
+              // console.log(res, "nextTime");
+              setloadingData(false);
+              res.forEach(data => {
+                arr.push(data.data());
+                console.log(arr, posts, "nextTime");
+                if (data.data() !== undefined) {
+                  setPosts(oldPosts => [
+                    ...oldPosts,
+                    { ...data.data(), postId: data.id },
+                  ]);
+                }
+              });
+
+              if (arr.length !== 0) {
+                ref.current = arr[arr.length - 1].timeStamp;
+              } else {
+                dataExtracted.current += 10;
+                if (dataExtracted.current >= following.length) {
+                  reachedEndRef.current = true;
+                } else {
+                  followingSliced = following.slice(
+                    dataExtracted.current,
+                    dataExtracted.current + 10
+                  );
+
+                  getPostDataFirstTime();
+                }
+              }
+            })
+            .catch(err => console.log(err));
+        }
+      };
+      const progressBarFunction = () => {
+        if (
+          document.documentElement.scrollHeight - window.innerHeight ===
+          window.scrollY
+        ) {
+          getPostDataNextTime();
+        }
+      };
+      document.addEventListener("scroll", progressBarFunction);
+      return function cleanUp() {
+        document.removeEventListener("scroll", progressBarFunction);
+      };
+    }
+  }, []);
+
   return (
     <div className={style.mainPostsWrappers}>
-      <div className={style.postWrapper}>
-        <div className={style.postHeader}>
-          <img
-            alt=""
-            src="https://instagram.flhe3-1.fna.fbcdn.net/v/t51.2885-19/s150x150/82504203_184828082887532_557036608088440832_n.jpg?_nc_ht=instagram.flhe3-1.fna.fbcdn.net&_nc_ohc=QoF9-oEmtHwAX9a6iam&oh=794176c42d1beb01a132e6e281679ebe&oe=5F7DFA15"
-            className={style.authorImg}
-          />
-          <div className={style.description}>
-            <h4 className={style.authorusername}>Wajahat.khokhar333</h4>
-            <h5 className={style.mediaLocation}>Khokhar house</h5>
-          </div>
-        </div>
-        <div className={style.mediaItem}>
-          {type === "video" ? (
-            <img
-              alt=""
-              src="https://cdn.searchenginejournal.com/wp-content/uploads/2019/07/the-essential-guide-to-using-images-legally-online-1520x800.png"
-              className={style.mediaData}
-            />
-          ) : (
-            <video alt="" width="320" height="240" controls>
-              <source src="" type="video/mp4" />
-              <source src="" type="video/ogg" />
-            </video>
+      {!loadingData ? (
+        <>
+          <span>{error}</span>
+          {posts.map(
+            (data, index) => (
+              <SinglePost data={data} key={index} />
+            ),
+            []
           )}
-        </div>
-        <div className={style.footer}>
-          <div className={style.footerReactIcons}>
-            <Heart className={style.heartReactIcon} />
-            <Comment className={style.commentIcon} />
-          </div>
-          <div className={style.bookMarkDiv}>
-            <Bookmark className={style.bookMarkIcon} />
-          </div>
-        </div>
-        <div className={style.captionDetails}>
-          <h2 className={style.caption}>
-            <strong>nosher007</strong> Here you go Islamabad
-          </h2>
-          <h6>7 Hours ago</h6>
-        </div>
-        <div className={style.commentSection}>
-          <form>
-            <textarea
-              placeholder="Add a comment..."
-              className={style.commentInp}
-            />
-            <button type="submit" className={style.commentBtn}>
-              Post
-            </button>
-          </form>
-        </div>
-      </div>
+        </>
+      ) : (
+        <img src={darkLoad} width="40px" height="40" alt="" />
+      )}
     </div>
   );
 }

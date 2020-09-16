@@ -3,15 +3,17 @@
   display: flex;
   justify-content: center;
   margin: 100px 0px 40px;
+  flex-direction: column;
+  align-items: center;
 }
 
 .postWrapper {
-  width: 50%;
+  width: 60%;
   background: var(--box-bg-color);
   border: 1px solid var(--box-border-color);
   border-radius: 4px;
-  margin: 14px 0px;
-  max-width: 660px;
+  margin: 16px 0px;
+  max-width: 615px;
   display: flex;
   flex-direction: column;
   padding: 0px;
@@ -27,9 +29,11 @@
 
 .authorImg {
   width: 40px;
-  height: auto;
+  height: 40px;
+  object-fit: contain;
   border-radius: 40px;
   margin-right: 16px;
+  border: 1px solid var(--box-border-color);
 }
 
 .authorusername {

@@ -35,7 +35,7 @@ export default function UserSearh({ match }) {
             setloadingData(false);
             res.forEach(data => {
               arr.push(data.data().personalData);
-              setusers([...arr]);
+              setusers(prevArr => [...prevArr, data.data().personalData]);
             });
 
             if (arr.length !== 0) {
