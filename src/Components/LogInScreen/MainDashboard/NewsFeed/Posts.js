@@ -6,7 +6,7 @@ import { db } from "../../../../Firebase/firebase";
 import darkLoad from "../../../../static/img/darkLoader.gif";
 function Posts() {
   const [posts, setPosts] = useState([]);
-  const [loadingData, setloadingData] = useState(true);
+  const [loadingData, setloadingData] = useState(false);
   const [error, setError] = useState(false);
   const userData = useSelector(state => state.auth.userData);
 
@@ -16,16 +16,15 @@ function Posts() {
   const ref = useRef(lastNameOfPerson);
   const reachedEndRef = useRef(reachedEnd);
   const dataExtracted = useRef(0);
-  // const followingSliced = useRef();
-  const following = [];
-  userData.following.forEach(data => following.push(data.followingUserName));
 
-  let followingSliced = following.slice(0, 10);
   useEffect(() => {
+    const following = [...userData.following];
+    const followingToUse = [];
+    following.forEach(data => followingToUse.push(data.followingUserName));
+    let followingSliced = followingToUse.slice(0, 10);
+
     if (followingSliced.length > 0) {
       setloadingData(true);
-      ref.current = "";
-      reachedEndRef.current = false;
 
       const getPostDataFirstTime = () => {
         const arr = [];
@@ -38,39 +37,35 @@ function Posts() {
             setloadingData(false);
             res.forEach(data => {
               arr.push(data.data());
-              console.log(arr, posts, "firstTime");
-              if (data.data() !== undefined) {
-                setPosts(oldPosts => [
-                  ...oldPosts,
-                  { ...data.data(), postId: data.id },
-                ]);
-              }
+
+              setPosts(prevPost => [
+                ...prevPost,
+                { ...data.data(), postId: data.id },
+              ]);
             });
+
             if (arr.length !== 0) {
               ref.current = arr[arr.length - 1].timeStamp;
             } else {
               dataExtracted.current += 10;
-              if (posts.length === 0) {
-                setError(true);
-              }
-              if (dataExtracted.current >= following.length) {
+
+              if (dataExtracted.current >= followingToUse.length) {
                 reachedEndRef.current = true;
               } else {
-                followingSliced = following.slice(
+                followingSliced = followingToUse.slice(
                   dataExtracted.current,
                   dataExtracted.current + 10
                 );
               }
             }
           })
-          .catch(err => console.log(err));
+          .catch(err => setError(err));
       };
 
       getPostDataFirstTime();
       const getPostDataNextTime = () => {
         const arr = [];
         if (!reachedEndRef.current) {
-          console.log("here", ref.current);
           db.collection("posts")
             .where("authorUserName", "in", followingSliced)
             .orderBy("timeStamp")
@@ -78,27 +73,24 @@ function Posts() {
             .limit(limit)
             .get()
             .then(res => {
-              // console.log(res, "nextTime");
               setloadingData(false);
               res.forEach(data => {
                 arr.push(data.data());
-                console.log(arr, posts, "nextTime");
-                if (data.data() !== undefined) {
-                  setPosts(oldPosts => [
-                    ...oldPosts,
-                    { ...data.data(), postId: data.id },
-                  ]);
-                }
+
+                setPosts(prevPost => [
+                  ...prevPost,
+                  { ...data.data(), postId: data.id },
+                ]);
               });
 
               if (arr.length !== 0) {
                 ref.current = arr[arr.length - 1].timeStamp;
               } else {
                 dataExtracted.current += 10;
-                if (dataExtracted.current >= following.length) {
-                  reachedEndRef.current = true;
+                if (dataExtracted.current >= followingToUse.length) {
+                  reachedEnd.current = true;
                 } else {
-                  followingSliced = following.slice(
+                  followingSliced.current = followingToUse.slice(
                     dataExtracted.current,
                     dataExtracted.current + 10
                   );
@@ -107,7 +99,7 @@ function Posts() {
                 }
               }
             })
-            .catch(err => console.log(err));
+            .catch(err => setError(err));
         }
       };
       const progressBarFunction = () => {
@@ -123,7 +115,7 @@ function Posts() {
         document.removeEventListener("scroll", progressBarFunction);
       };
     }
-  }, []);
+  }, [userData.following, reachedEnd]);
 
   return (
     <div className={style.mainPostsWrappers}>
