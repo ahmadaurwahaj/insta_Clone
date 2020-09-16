@@ -185,17 +185,9 @@ export const signupUser = (
     });
 };
 
-export const getCurrentUserData = (user, msg) => dispatch => {
+export const getCurrentUserData = msg => dispatch => {
   dispatch(getUserData());
-
-  let uid = "";
-  if (user.uid === undefined) {
-    uid = user.user.uid;
-  } else {
-    uid = user.uid;
-  }
-
-  console.log(msg);
+  const uid = myFirebase.auth().currentUser.uid;
   if (uid === myFirebase.auth().currentUser.uid) {
     db.collection("users")
       .where("personalData.uid", "==", uid)

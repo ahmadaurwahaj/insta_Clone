@@ -24,13 +24,8 @@ function App(props) {
   const { isAuthenticated, isVerifying } = props;
   const userData = useSelector(state => state.auth.userData);
   useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(getCurrentUserData(user, "called from app.js"));
-    }
-    // return () => {
-    //   unsub();
-    // };
-  }, [dispatch, isAuthenticated, user]);
+    if (isAuthenticated) dispatch(getCurrentUserData("called from app.js"));
+  }, [dispatch, isAuthenticated]);
 
   return (
     <Switch>

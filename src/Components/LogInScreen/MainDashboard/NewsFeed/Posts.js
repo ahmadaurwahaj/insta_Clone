@@ -9,6 +9,7 @@ function Posts() {
   const [loadingData, setloadingData] = useState(false);
   const [error, setError] = useState(false);
   const userData = useSelector(state => state.auth.userData);
+  const docRef = useSelector(state => state.auth.docRef);
 
   const limit = 4;
   let lastNameOfPerson = "";
@@ -18,15 +19,22 @@ function Posts() {
   const dataExtracted = useRef(0);
 
   useEffect(() => {
+    // const following = [];
+    // db.collection("users")
+    //   .doc(docRef)
+    //   .get()
+    //   .then(res => following.push(res.data().following));
+
+    // console.log(following);
     const following = [...userData.following];
     const followingToUse = [];
+
     following.forEach(data => followingToUse.push(data.followingUserName));
     let followingSliced = followingToUse.slice(0, 10);
 
     if (followingSliced.length > 0) {
-      setloadingData(true);
-
       const getPostDataFirstTime = () => {
+        setloadingData(true);
         const arr = [];
         db.collection("posts")
           .where("authorUserName", "in", followingSliced)
@@ -37,10 +45,9 @@ function Posts() {
             setloadingData(false);
             res.forEach(data => {
               arr.push(data.data());
-
               setPosts(prevPost => [
                 ...prevPost,
-                { ...data.data(), postId: data.id },
+                { ...data.data(), docId: data.id },
               ]);
             });
 
@@ -58,8 +65,8 @@ function Posts() {
                 );
               }
             }
-          })
-          .catch(err => setError(err));
+          });
+        // .catch(err => setError(true));
       };
 
       getPostDataFirstTime();
@@ -76,10 +83,9 @@ function Posts() {
               setloadingData(false);
               res.forEach(data => {
                 arr.push(data.data());
-
                 setPosts(prevPost => [
                   ...prevPost,
-                  { ...data.data(), postId: data.id },
+                  { ...data.data(), docId: data.id },
                 ]);
               });
 
@@ -88,7 +94,7 @@ function Posts() {
               } else {
                 dataExtracted.current += 10;
                 if (dataExtracted.current >= followingToUse.length) {
-                  reachedEnd.current = true;
+                  reachedEndRef.current = true;
                 } else {
                   followingSliced.current = followingToUse.slice(
                     dataExtracted.current,
@@ -98,8 +104,8 @@ function Posts() {
                   getPostDataFirstTime();
                 }
               }
-            })
-            .catch(err => setError(err));
+            });
+          // .catch(err => setError(true));
         }
       };
       const progressBarFunction = () => {
@@ -124,7 +130,7 @@ function Posts() {
           <span>{error}</span>
           {posts.map(
             (data, index) => (
-              <SinglePost data={data} key={index} />
+              <SinglePost postData={data} key={index} />
             ),
             []
           )}
