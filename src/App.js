@@ -6,7 +6,7 @@ import Home from "./Components/LogInScreen/HomeDefaultDisplay";
 import Login from "./Components/LogOutScreen/SignIn/SignIn";
 import SignUp from "./Components/LogOutScreen/SignUp/Signup";
 import Settings from "./Components/LogInScreen/Settings/Settings";
-import Posts from "./Components/LogInScreen/MainDashboard/NewsFeed/Posts";
+// import NewsFeed from "./Components/LogInScreen/MainDashboard/NewsFeed/PostsMain";
 import ProfileSetup from "./Components/LogOutScreen/SignUp/SignUpSetup";
 import Profile from "./Components/LogInScreen/Profile/Profile";
 import SpecificPost from "./Components/LogInScreen/SpecificPost/SpecificPost";
@@ -32,7 +32,6 @@ function App(props) {
         exact
         path="/"
         component={Home}
-        ChildComponent={Posts}
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
         retrieveSuccess={retrieveSuccess}

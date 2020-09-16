@@ -4,13 +4,12 @@ import SinglePost from "./SinglePost";
 import { useSelector } from "react-redux";
 import { db } from "../../../../Firebase/firebase";
 import darkLoad from "../../../../static/img/darkLoader.gif";
-function Posts() {
+function Posts({ followingUsers }) {
   const [posts, setPosts] = useState([]);
   const [loadingData, setloadingData] = useState(false);
   const [error, setError] = useState(false);
-  const userData = useSelector(state => state.auth.userData);
+  // const userData = useSelector(state => state.auth.userData);
   // const docRef = useSelector(state => state.auth.docRef);
-
   const limit = 4;
   let lastNameOfPerson = "";
   let reachedEnd = false;
@@ -19,22 +18,15 @@ function Posts() {
   const dataExtracted = useRef(0);
 
   useEffect(() => {
-    // const following = [];
-    // db.collection("users")
-    //   .doc(docRef)
-    //   .get()
-    //   .then(res => following.push(res.data().following));
-
-    // console.log(following);
-    const following = [...userData.following];
+    const following = [...followingUsers];
     const followingToUse = [];
 
     following.forEach(data => followingToUse.push(data.followingUserName));
     let followingSliced = followingToUse.slice(0, 10);
 
+    setloadingData(true);
     if (followingSliced.length > 0) {
       const getPostDataFirstTime = () => {
-        setloadingData(true);
         const arr = [];
         db.collection("posts")
           .where("authorUserName", "in", followingSliced)
@@ -83,6 +75,7 @@ function Posts() {
               setloadingData(false);
               res.forEach(data => {
                 arr.push(data.data());
+
                 setPosts(prevPost => [
                   ...prevPost,
                   { ...data.data(), docId: data.id },
@@ -96,7 +89,7 @@ function Posts() {
                 if (dataExtracted.current >= followingToUse.length) {
                   reachedEndRef.current = true;
                 } else {
-                  followingSliced.current = followingToUse.slice(
+                  followingSliced = followingToUse.slice(
                     dataExtracted.current,
                     dataExtracted.current + 10
                   );
@@ -121,18 +114,24 @@ function Posts() {
         document.removeEventListener("scroll", progressBarFunction);
       };
     }
-  }, [userData.following, reachedEnd]);
+  }, [followingUsers, reachedEnd]);
 
   return (
     <div className={style.mainPostsWrappers}>
       {!loadingData ? (
         <>
           <span>{error}</span>
-          {posts.map(
-            (data, index) => (
-              <SinglePost postData={data} key={index} />
-            ),
-            []
+          {posts.length > 0 ? (
+            <>
+              {posts.map(
+                (data, index) => (
+                  <SinglePost postData={data} key={index} />
+                ),
+                []
+              )}
+            </>
+          ) : (
+            <h2>No Posts to display</h2>
           )}
         </>
       ) : (
