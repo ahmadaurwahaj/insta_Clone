@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import style from "./Posts.module.css";
 import SinglePost from "./SinglePost";
-import { useSelector } from "react-redux";
 import { db } from "../../../../Firebase/firebase";
 import darkLoad from "../../../../static/img/darkLoader.gif";
 function Posts({ followingUsers }) {
   const [posts, setPosts] = useState([]);
   const [loadingData, setloadingData] = useState(false);
   const [error, setError] = useState(false);
-  // const userData = useSelector(state => state.auth.userData);
-  // const docRef = useSelector(state => state.auth.docRef);
   const limit = 4;
   let lastNameOfPerson = "";
   let reachedEnd = false;
