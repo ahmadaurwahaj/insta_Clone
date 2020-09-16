@@ -116,10 +116,10 @@ export const pullNotificiation = (type, postData, userData) => {
   }
 };
 
-const addLike = (postData, userData, db) => {
-  const arr = postData.likes;
+const addLike = (postDataNew, postData, userData, db, docId) => {
+  const arr = postDataNew.likes;
   db.collection("posts")
-    .doc(postData.docId)
+    .doc(docId)
     .update({
       likes: [
         {
@@ -137,18 +137,21 @@ const addLike = (postData, userData, db) => {
     db
   );
 };
-export const removeLike = (postData, userData) => {
-  const arr = postData.likes;
+export const removeLike = (postDataNew, postData, userData, db, docId) => {
+  const arr = postDataNew.likes;
   const updatedArr = arr.filter(
     data => data.likedByUserName !== userData.personalData.userName
   );
-  db.collection("posts").doc(postData.docId).update({
-    likes: updatedArr,
-  });
-  pullNotificiation("likePush", postData, userData);
+  db.collection("posts")
+    .doc(docId)
+    .update({
+      likes: updatedArr,
+    })
+    .then(res => "successfully done this");
+  pullNotificiation("likePush", postData, userData, db);
 };
 
-const addComment = (e, userData, postData, comment, setComment) => {
+const addComment = (e, userData, postData, comment, setComment, db) => {
   e.preventDefault();
   if (comment === "") {
     // console.log("Cant input");
@@ -168,7 +171,13 @@ const addComment = (e, userData, postData, comment, setComment) => {
       })
       .then(res => {
         setComment("");
-        pushNotificiation("recently commmented on your post", "commentPush");
+        pushNotificiation(
+          "recently commmented on your post",
+          "commentPush",
+          postData,
+          userData,
+          db
+        );
       });
   }
 };
@@ -180,7 +189,7 @@ const isSaved = (arr, postData) => {
   return false;
 };
 const addToSaved = (userData, docRef, postData) => {
-  if (isSaved(userData.saved)) {
+  if (isSaved(userData.saved, postData)) {
     console.log("already in saved");
   } else {
     const saved = userData.saved;
@@ -199,33 +208,34 @@ const addToSaved = (userData, docRef, postData) => {
 function SinglePost({ postData }) {
   const userData = useSelector(state => state.auth.userData);
 
-  const [dataError, setDataError] = useState(false);
+  // const [dataError, setDataError] = useState(false);
   const docRef = useSelector(state => state.auth.docRef);
   const [modalOpen, setModalOpen] = useState(false);
   const [comment, setComment] = useState("");
-  const [postDataRequired, setPostDataRequired] = useState([]);
+  const [postDataRequired, setPostDataRequired] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    console.log("useEffect called");
-    if (postData.docId !== undefined) {
-      setIsLoading(true);
-      db.collection("posts")
-        .doc(postData.docId)
-        .onSnapshot(querySnapshot => {
-          setPostDataRequired(...postDataRequired, {
-            likes: querySnapshot.data().likes,
-            comments: querySnapshot.data().comments,
-          });
-          setIsLoading(false);
+    setIsLoading(true);
+    const unsub = db
+      .collection("posts")
+      .doc(postData.docId)
+      .onSnapshot(querySnapshot => {
+        setPostDataRequired({
+          likes: querySnapshot.data().likes,
+          comments: querySnapshot.data().comments,
         });
-    }
+        setIsLoading(false);
+      });
+    return () => {
+      unsub();
+    };
   }, [postData.docId]);
-  // const handleClickOpen = () => {
-  //   setModalOpen(true);
-  // };
-  // const handleClose = () => {
-  //   setModalOpen(false);
-  // };
+  const handleClickOpen = () => {
+    setModalOpen(true);
+  };
+  const handleClose = () => {
+    setModalOpen(false);
+  };
 
   return (
     <>
@@ -257,31 +267,91 @@ function SinglePost({ postData }) {
             <div className={style.footerReactIcons}>
               {isLiked(postDataRequired.likes, userData) ? (
                 <HeartFill
-                  onClick={() => removeLike(postData, userData)}
+                  onClick={() =>
+                    removeLike(
+                      postDataRequired,
+                      postData,
+                      userData,
+                      db,
+                      postData.docId
+                    )
+                  }
                   className={style.heartReactIcon}
                 ></HeartFill>
               ) : (
                 <Heart
-                  onClick={() => addLike(postData, userData, db)}
+                  onClick={() =>
+                    addLike(
+                      postDataRequired,
+                      postData,
+                      userData,
+                      db,
+                      postData.docId
+                    )
+                  }
                   className={style.heartReactIcon}
                 />
               )}
               <Comment className={style.commentIcon} />
+              {postDataRequired.likes.length > 0 && (
+                <>
+                  {postDataRequired.likes.length > 1 ? (
+                    <span className={style.likesCount}>
+                      Liked by{" "}
+                      <Link
+                        to={`/accounts/${postDataRequired.likes[0].likedByUserName}`}
+                        className={style.likesLink}
+                      >
+                        {postDataRequired.likes[0].likedByUserName}
+                      </Link>{" "}
+                      and{" "}
+                      <span
+                        className={style.likesLink}
+                        onClick={handleClickOpen}
+                      >
+                        {postDataRequired.likes.length - 1} others
+                      </span>
+                    </span>
+                  ) : (
+                    <span className={style.likesCount}>
+                      Liked by{" "}
+                      <Link
+                        to={`/accounts/${postDataRequired.likes[0].likedByUserName}`}
+                        className={style.likesLink}
+                      >
+                        {postDataRequired.likes[0].likedByUserName}
+                      </Link>
+                    </span>
+                  )}
+                </>
+              )}
+              <Modal
+                heading="Likes"
+                modalData={postDataRequired.likes}
+                userNameKey="likedByUserName"
+                profilePicKey="likedByProfilePicUrl"
+                modalOpen={modalOpen}
+                handleClose={handleClose}
+              />
             </div>
             <div className={style.bookMarkDiv}>
-              <Bookmark className={style.bookMarkIcon} />
+              {isSaved(userData.saved, postData) ? (
+                <Bookmarked
+                  onClick={() => addToSaved(userData, docRef, postData)}
+                  className={style.bookMarkIcon}
+                />
+              ) : (
+                <Bookmark
+                  onClick={() => addToSaved(userData, docRef, postData)}
+                  className={style.bookMarkIcon}
+                />
+              )}
             </div>
           </div>
-          <div className={style.captionDetails}>
-            <h2 className={style.caption}>
-              <strong>{postData.authorUserName}</strong> {postData.caption}
-            </h2>
-            <h6>7 Hours ago</h6>
-          </div>
-          {postData.comments.length > 0 && (
+          {postDataRequired.comments.length > 0 && (
             <>
-              <div className={style.commentSections}>
-                {postData.comments.map(
+              <div className={style.commentDisplaySection}>
+                {postDataRequired.comments.map(
                   (data, index) => (
                     <div key={index} className={style.singComment}>
                       <div className={style.innerCommentSection}>
@@ -313,13 +383,30 @@ function SinglePost({ postData }) {
               </div>
             </>
           )}
+          <div className={style.captionDetails}>
+            <h2 className={style.caption}>
+              <strong>{postData.authorUserName}</strong> {postData.caption}
+            </h2>
+            <h6>7 Hours ago</h6>
+          </div>
+
           <div className={style.commentSection}>
-            <form>
+            <form
+              onSubmit={e =>
+                addComment(e, userData, postData, comment, setComment, db)
+              }
+            >
               <textarea
                 placeholder="Add a comment..."
                 className={style.commentInp}
+                value={comment}
+                onChange={e => setComment(e.target.value)}
               />
-              <button type="submit" className={style.commentBtn}>
+              <button
+                type="submit"
+                className={style.commentBtn}
+                disabled={comment === ""}
+              >
                 Post
               </button>
             </form>

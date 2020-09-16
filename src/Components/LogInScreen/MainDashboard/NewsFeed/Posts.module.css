@@ -116,6 +116,84 @@
   font-size: 14px;
 }
 
+.commentDisplaySection {
+  width: 100%;
+  display: flex;
+  max-height: 220px;
+  /* max-height: 10.1%; */
+  overflow-y: scroll;
+  /* overflow-x: hidden; */
+  border-top: 1px solid var(--box-border-color);
+  border-bottom: 1px solid var(--box-border-color);
+  padding: 10px;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: flex-start;
+  word-wrap: break-word; /* All browsers since IE 5.5+ */
+  box-sizing: border-box;
+  margin: 4px 0px 10px;
+}
+.commentDisplaySection::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.commentDisplaySection {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.innerCommentSection {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.singComment {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+.commentImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  object-fit: contain;
+  border: 1px solid var(--box-border-color);
+}
+.authorData {
+  display: flex;
+  align-items: center;
+}
+.commentContetn {
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+.commentContent {
+  font-size: 14px;
+  margin-left: 8px;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.commentDetails a {
+  color: var(--primary-black-color);
+  font-weight: 600;
+  margin-left: 10px;
+  margin-top: 6px;
+}
+
+.likesCount {
+  font-size: 15px;
+  margin-left: 16px;
+  font-weight: 500;
+}
+.likesLink {
+  color: var(--primary-black-color);
+  font-weight: 600;
+}
 @media only screen and (max-width: 660px) {
   .postWrapper {
     border: 0px;

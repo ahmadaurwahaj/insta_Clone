@@ -17,12 +17,11 @@ import "./App.css";
 import { getCurrentUserData } from "./Redux/Actions/auth";
 
 function App(props) {
-  const user = useSelector(state => state.auth.user);
+  // const user = useSelector(state => state.auth.user);
   const retrieveSuccess = useSelector(state => state.auth.retrieveSuccess);
-  const dispatch = useDispatch();
-
-  const { isAuthenticated, isVerifying } = props;
   const userData = useSelector(state => state.auth.userData);
+  const dispatch = useDispatch();
+  const { isAuthenticated, isVerifying } = props;
   useEffect(() => {
     if (isAuthenticated) dispatch(getCurrentUserData("called from app.js"));
   }, [dispatch, isAuthenticated]);

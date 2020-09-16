@@ -9,7 +9,7 @@ function Posts() {
   const [loadingData, setloadingData] = useState(false);
   const [error, setError] = useState(false);
   const userData = useSelector(state => state.auth.userData);
-  const docRef = useSelector(state => state.auth.docRef);
+  // const docRef = useSelector(state => state.auth.docRef);
 
   const limit = 4;
   let lastNameOfPerson = "";
@@ -65,8 +65,8 @@ function Posts() {
                 );
               }
             }
-          });
-        // .catch(err => setError(true));
+          })
+          .catch(err => setError(true));
       };
 
       getPostDataFirstTime();
@@ -104,8 +104,8 @@ function Posts() {
                   getPostDataFirstTime();
                 }
               }
-            });
-          // .catch(err => setError(true));
+            })
+            .catch(err => setError(true));
         }
       };
       const progressBarFunction = () => {
