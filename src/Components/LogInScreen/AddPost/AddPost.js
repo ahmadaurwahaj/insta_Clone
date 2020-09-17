@@ -56,6 +56,7 @@ function AddPost() {
   const docRef = useSelector(state => state.auth.docRef);
   const updateProfile = e => {
     e.preventDefault();
+    setErrorMsg("");
     setIsUpdating(true);
     updateImg(userData.profilePicUrl);
   };
@@ -100,6 +101,7 @@ function AddPost() {
   };
 
   const updateImg = profilePicUrl => {
+    setErrorMsg("");
     // console.log("image update");
     if (profilePicUrl.type.includes("image") && profilePicUrl !== "") {
       setShowProgress(true);
@@ -132,6 +134,9 @@ function AddPost() {
             });
         }
       );
+    } else {
+      setIsUpdating(false);
+      setErrorMsg("Only upload Image");
     }
   };
 

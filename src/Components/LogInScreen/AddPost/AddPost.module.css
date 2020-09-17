@@ -73,6 +73,10 @@
   align-items: center;
 }
 
+.btn:disabled {
+  background: rgba(0, 149, 223, 0.3);
+}
+
 .errorMsg {
   margin-left: 10px;
   font-size: 14px;
