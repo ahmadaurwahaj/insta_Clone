@@ -132,7 +132,7 @@ function Posts({ followingUsers }) {
               )}
             </>
           ) : (
-            <h2>No Posts to display</h2>
+            <h2 className={style.noPostMsg}>No Posts to display</h2>
           )}
         </>
       ) : (

@@ -2,7 +2,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 100px 0px 40px;
+  margin: 50px 0px 40px;
   flex-direction: column;
   align-items: center;
 }
@@ -71,6 +71,7 @@
 .bookMarkIcon,
 .commentIcon {
   font-size: 24px;
+  cursor: pointer;
 }
 
 .heartReactIcon {
@@ -178,11 +179,13 @@
   word-break: break-all;
 }
 
+.commentDetails {
+  margin-left: 10px;
+  margin-top: 6px;
+}
 .commentDetails a {
   color: var(--primary-black-color);
   font-weight: 600;
-  margin-left: 10px;
-  margin-top: 6px;
 }
 
 .likesCount {
@@ -193,6 +196,14 @@
 .likesLink {
   color: var(--primary-black-color);
   font-weight: 600;
+}
+
+.noPostMsg {
+  font-weight: 400;
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  margin-top: 60px;
 }
 @media only screen and (max-width: 660px) {
   .postWrapper {

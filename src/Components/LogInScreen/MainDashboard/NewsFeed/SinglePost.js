@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import style from "./Posts.module.css";
 import { db } from "../../../../Firebase/firebase";
 import { Link } from "react-router-dom";
@@ -214,6 +214,8 @@ function SinglePost({ postData }) {
   const [comment, setComment] = useState("");
   const [postDataRequired, setPostDataRequired] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+
+  const ref = useRef(null);
   useEffect(() => {
     setIsLoading(true);
     const unsub = db
@@ -237,6 +239,9 @@ function SinglePost({ postData }) {
     setModalOpen(false);
   };
 
+  const focusCommentField = () => {
+    ref.current.focus();
+  };
   return (
     <>
       {!isLoading && (
@@ -292,7 +297,10 @@ function SinglePost({ postData }) {
                   className={style.heartReactIcon}
                 />
               )}
-              <Comment className={style.commentIcon} />
+              <Comment
+                className={style.commentIcon}
+                onClick={focusCommentField}
+              />
               {postDataRequired.likes.length > 0 && (
                 <>
                   {postDataRequired.likes.length > 1 ? (
@@ -401,6 +409,7 @@ function SinglePost({ postData }) {
                 className={style.commentInp}
                 value={comment}
                 onChange={e => setComment(e.target.value)}
+                ref={ref}
               />
               <button
                 type="submit"

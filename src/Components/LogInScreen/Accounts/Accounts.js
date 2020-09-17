@@ -14,8 +14,10 @@ function Accounts({ match }) {
 
   useEffect(() => {
     let userTemp = {};
+    let unsub = null;
     if (accountUserName !== userData.personalData.userName) {
-      db.collection("users")
+      unsub = db
+        .collection("users")
         .where("personalData.userName", "==", accountUserName)
         .onSnapshot(querySnapshot => {
           setDataError(true);
@@ -28,6 +30,10 @@ function Accounts({ match }) {
             setFetchData(true);
           });
         });
+
+      return () => {
+        unsub();
+      };
     }
   }, [accountUserName, userData.personalData.userName]);
   return (
