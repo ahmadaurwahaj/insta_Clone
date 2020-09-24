@@ -18,6 +18,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
   transforms: [JSOGTransform],
   whitelist: ["userData", "docRef", "retrieveSuccess"],
+  blacklist: ["stories"],
 };
 
 const pReducer = persistReducer(persistConfig, rootReducer);

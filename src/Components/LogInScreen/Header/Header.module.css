@@ -151,6 +151,60 @@
   font-size: 20px;
 }
 
+.addStoryModalWrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.addStoryInnerContainer {
+  background: #333;
+  padding: 20px;
+  color: #fff;
+  border: 0px;
+  width: 100vw;
+  max-width: 400px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageUploadDiv {
+  padding: 20px 2px;
+  border: 1px solid #fff;
+  width: 20%;
+  justify-self: center;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  margin: 16px 0px;
+  cursor: pointer;
+}
+
+.imageIcon {
+  font-size: 34px;
+}
+
+.storyHeading {
+  font-weight: 300;
+}
+
+.storyAddBtn {
+  font-size: 16px;
+  background: transparent;
+  padding: 8px 15px;
+  color: #fff;
+  border: 1px solid #fff;
+  border-radius: 4px;
+}
 @media only screen and (max-width: 768px) {
   .headerMainWrapper {
     align-items: center;

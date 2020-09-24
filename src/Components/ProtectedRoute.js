@@ -9,6 +9,7 @@ const ProtectedRoute = ({
   isVerifying,
   retrieveSuccess,
   isNewUser,
+  isHeader = true,
   ...rest
 }) => (
   <Route
@@ -24,7 +25,7 @@ const ProtectedRoute = ({
                 <SetupProfile />
               ) : (
                 <>
-                  <Header {...props}></Header>
+                  {isHeader && <Header {...props}></Header>}
                   <Component {...props} {...rest} />
                 </>
               )}

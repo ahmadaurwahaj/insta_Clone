@@ -14,7 +14,6 @@ import {
   SUCESS_GET_USER_DATA,
   FAILURE_GET_USER_DATA,
 } from "./../Actions/auth";
-
 const userState = {
   isLoggingIn: false,
   isLoggingOut: false,

@@ -3,6 +3,7 @@ import style from "./Posts.module.css";
 import SinglePost from "./SinglePost";
 import { db } from "../../../../Firebase/firebase";
 import darkLoad from "../../../../static/img/darkLoader.gif";
+// import Stories from "./Stories/Stories";
 function Posts({ followingUsers }) {
   const [posts, setPosts] = useState([]);
   const [loadingData, setloadingData] = useState(false);
@@ -33,6 +34,7 @@ function Posts({ followingUsers }) {
           .then(res => {
             setloadingData(false);
             res.forEach(data => {
+              console.log("bef", data.data().authorUserName);
               arr.push(data.data());
               setPosts(prevPost => [
                 ...prevPost,
@@ -42,6 +44,7 @@ function Posts({ followingUsers }) {
 
             if (arr.length !== 0) {
               ref.current = arr[arr.length - 1].timeStamp;
+              console.log(ref.current, "refcurrentaft");
             } else {
               dataExtracted.current += 10;
 
@@ -72,7 +75,7 @@ function Posts({ followingUsers }) {
               setloadingData(false);
               res.forEach(data => {
                 arr.push(data.data());
-
+                console.log("aft", data.data().authorUserName);
                 setPosts(prevPost => [
                   ...prevPost,
                   { ...data.data(), docId: data.id },
@@ -81,6 +84,7 @@ function Posts({ followingUsers }) {
 
               if (arr.length !== 0) {
                 ref.current = arr[arr.length - 1].timeStamp;
+                console.log(ref.current, "refcurrent");
               } else {
                 dataExtracted.current += 10;
                 if (dataExtracted.current >= followingToUse.length) {
@@ -99,16 +103,38 @@ function Posts({ followingUsers }) {
         }
       };
       const progressBarFunction = () => {
-        if (
-          document.documentElement.scrollHeight - window.innerHeight ===
-            parseInt(window.scrollY) ||
-          document.documentElement.scrollHeight - window.innerHeight ===
-            parseInt(window.scrollY) + 1 ||
-          document.documentElement.scrollHeight - window.innerHeight ===
-            parseInt(window.scrollY) - 1
-        ) {
+        const windowHeight =
+          "innerHeight" in window
+            ? window.innerHeight
+            : document.documentElement.offsetHeight;
+        const body = document.body;
+        const html = document.documentElement;
+        const docHeight = Math.max(
+          body.scrollHeight,
+          body.offsetHeight,
+          html.clientHeight,
+          html.scrollHeight,
+          html.offsetHeight
+        );
+        const windowBottom = windowHeight + window.pageYOffset;
+        if (windowBottom >= docHeight) {
+          console.log("i am getting triggered");
+
           getPostDataNextTime();
         }
+        //  else {
+        //   console.log("not at boottom");
+        // }
+        // if (
+        //   document.documentElement.scrollHeight - window.innerHeight ===
+        //   window.scrollY
+        //   // document.documentElement.scrollHeight - window.innerHeight ===
+        //   //   parseInt(window.scrollY) + 1 ||
+        //   // document.documentElement.scrollHeight - window.innerHeight ===
+        //   //   parseInt(window.scrollY) - 1
+        // ) {
+        //   console.log("i am causing re-render");
+        // }
       };
       document.addEventListener("scroll", progressBarFunction);
       return function cleanUp() {

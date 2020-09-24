@@ -1,0 +1,129 @@
+.mainWrapper {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  margin-top: 64px;
+}
+
+.innerWrapper {
+  width: 100%;
+  max-width: 620px;
+  background: var(--box-bg-color);
+  border: 1px solid var(--box-border-color);
+  border-radius: 4px;
+  display: flex;
+  padding: 22px 16px;
+  box-sizing: border-box;
+}
+
+.singleItem {
+  margin-right: 16px;
+  list-style-type: none;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 100px;
+}
+
+.storyDisplayImg {
+  object-fit: cover;
+}
+
+.storiesWrapper {
+  background: black;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.storiesHeader {
+  width: 95%;
+  max-width: 330px;
+  display: flex;
+  padding: 10px 0px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.storyHeaderImg {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 100px;
+  margin-right: 10px;
+}
+
+.storiesHeader h1 {
+  font-size: 14px;
+}
+
+.storiesClose {
+  padding: 0px;
+  color: white;
+  background: transparent;
+  border: 0px;
+  position: relative;
+  justify-self: flex-end;
+  margin-left: auto;
+  display: flex;
+  font-size: 20px;
+}
+
+.mainStory {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+
+.leftArrow {
+  margin-left: -40px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 999;
+}
+
+.rightArrow {
+  margin-left: 350px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.storyDiv {
+  width: 100%;
+  max-width: 330px;
+}
+
+@media only screen and (max-width: 425px) {
+  .storiesWrapper {
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+  }
+  .storiesHeader {
+    max-width: 100%;
+    margin-top: 0px;
+  }
+  .storyDiv {
+    max-width: 100%;
+  }
+  .leftArrow {
+    left: 0px;
+    margin-left: 10px;
+    /* cursor: pointer;
+    position: absolute;*/
+    z-index: 999;
+  }
+
+  .rightArrow {
+    right: 0;
+    margin-right: 10px;
+    float: right;
+    margin-left: auto;
+    cursor: pointer;
+    position: absolute;
+    z-index: 999;
+  }
+}

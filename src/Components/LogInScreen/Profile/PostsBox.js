@@ -12,7 +12,8 @@ function PostsBox({ posts }) {
     if (posts.length > 0) {
       let arr = [];
       posts.forEach(data => {
-        db.collection("posts")
+        const unsub = db
+          .collection("posts")
           .doc(data.ref)
           .get()
           .then(res => {
@@ -20,6 +21,10 @@ function PostsBox({ posts }) {
             arr.push({ ...res.data(), postId: res.id });
             setPostData([...arr]);
           });
+
+        return () => {
+          unsub();
+        };
       });
     } else {
       setNoData(true);

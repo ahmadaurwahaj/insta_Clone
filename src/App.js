@@ -6,7 +6,7 @@ import Home from "./Components/LogInScreen/HomeDefaultDisplay";
 import Login from "./Components/LogOutScreen/SignIn/SignIn";
 import SignUp from "./Components/LogOutScreen/SignUp/Signup";
 import Settings from "./Components/LogInScreen/Settings/Settings";
-// import NewsFeed from "./Components/LogInScreen/MainDashboard/NewsFeed/PostsMain";
+import Story from "./Components/LogInScreen/MainDashboard/NewsFeed/Stories/Stories";
 import ProfileSetup from "./Components/LogOutScreen/SignUp/SignUpSetup";
 import Profile from "./Components/LogInScreen/Profile/Profile";
 import SpecificPost from "./Components/LogInScreen/SpecificPost/SpecificPost";
@@ -87,6 +87,17 @@ function App(props) {
         user={userData}
         retrieveSuccess={retrieveSuccess}
         isNewUser={userData}
+      />
+      <ProtectedRoute
+        path="/stories/:userName"
+        exact
+        component={Story}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+        user={userData}
+        retrieveSuccess={retrieveSuccess}
+        isNewUser={userData}
+        isHeader={false}
       />
       <Route path="/login" component={Login} exact />
       <Route path="/signup" component={SignUp} exact />

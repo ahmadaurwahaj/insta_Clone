@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./Header.module.css";
 import { Link } from "react-router-dom";
 import { BiUserCircle as Profile } from "react-icons/bi";
@@ -9,21 +9,87 @@ import { logoutUser } from "../../../Redux/Actions/auth";
 import { useDispatch } from "react-redux";
 import Heart from "./../../../static/img/heart.png";
 import HeartFill from "./../../../static/img/heartFill.png";
-// import Message from "./../../../../static/img/email.png";
-// import Explore from "./../../../../static/img/explore.png";
+import { RiAddCircleFill as AddIcon } from "react-icons/ri";
 import { Menu } from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
+import Modal from "@material-ui/core/Modal";
+import { ImImages as ImageIcon } from "react-icons/im";
+import { db, storage } from "../../../Firebase/firebase";
+import firebase from "firebase/app";
+import { useSelector } from "react-redux";
+import crypto from "crypto";
+// import Message from "./../../../../static/img/email.png";
+// import Explore from "./../../../../static/img/explore.png";
 function NavLinks({ user }) {
   const dispatch = useDispatch();
-  // console.log(user);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openNotif = Boolean(anchorEl);
   const [anchorProfile, setAnchorProfile] = React.useState(null);
   const openProfile = Boolean(anchorProfile);
-
+  const [open, setOpen] = React.useState(false);
+  const [storyMediaUrl, setStoryMediaUrl] = useState("");
+  const docRef = useSelector(state => state.auth.docRef);
+  const handleImg = e => {
+    // setShouldUpdate(true);
+    const media = e.target.files[0];
+    setStoryMediaUrl(media);
+  };
   const handleLogout = () => {
     dispatch(logoutUser());
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const uploadImg = () => {
+    if (storyMediaUrl !== "") {
+      if (storyMediaUrl.type.includes("image")) {
+        const uuid = `${storyMediaUrl.name}-${crypto
+          .randomBytes(16)
+          .toString("hex")}`;
+        const uploadTask = storage.ref(`images/${uuid}`).put(storyMediaUrl);
+        uploadTask.on(
+          "state_changed",
+          snapshot => {},
+          error => {
+            // setErrorMsg(error);
+            // setIsUpdating(false);
+          },
+          () => {
+            storage
+              .ref("images")
+              .child(uuid)
+              .getDownloadURL()
+              .then(url => {
+                addData(url);
+                // setIsUpdating(false);
+              });
+          }
+        );
+      }
+    }
+  };
+  const addData = url => {
+    db.collection("users")
+      .doc(docRef)
+      .collection("stories")
+      .add({
+        url,
+        type: "img",
+        headerForStories: {
+          userName: user.personalData.userName,
+          profilePicUrl: user.personalData.profilePicUrl,
+        },
+        viewedBy: [],
+        createdAt: firebase.firestore.Timestamp.now().toMillis(),
+      })
+      .then(res => handleClose());
   };
   return (
     <ul className={style.listWrapper}>
@@ -32,12 +98,40 @@ function NavLinks({ user }) {
           <img alt="" src={HomeIcon} className={style.icon}></img>
         </Link>
       </li>
-      {/* <li className={style.singleItem}>
-        <Link to="/inbox">
-          <img src={Message} className={style.icon}></img>
-        </Link>
-      </li>
       <li className={style.singleItem}>
+        <AddIcon className={style.icon} onClick={handleOpen} />
+
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="add-story-modal"
+          aria-describedby="modal to add stories"
+        >
+          <div className={style.addStoryModalWrapper}>
+            <div className={style.addStoryInnerContainer}>
+              <h1 className={style.storyHeading}>Add Story</h1>
+              <h6>Stories Will disappear after 24 hours</h6>
+              <div className={style.imageUploadDiv}>
+                <input
+                  type="file"
+                  name="media"
+                  onChange={handleImg}
+                  id="mediaUrl"
+                />
+                <label htmlFor="mediaUrl" className={style.updatePhoto}>
+                  <ImageIcon className={style.imageIcon} />
+                </label>
+              </div>
+
+              <button type="" className={style.storyAddBtn} onClick={uploadImg}>
+                Add
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </li>
+
+      {/* <li className={style.singleItem}>
         <Link to="/explore">
           <img src={Explore} className={style.icon}></img>
         </Link>
