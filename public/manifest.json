@@ -1,14 +1,14 @@
 {
   "short_name": "Instagram",
-  "name": "Create React App Sample",
+  "name": "Instagram build with ReactJs",
   "icons": [
     {
-      "src": "https://instagram.flhe3-1.fna.fbcdn.net/v/t51.2885-19/s320x320/82906858_791653004647399_1879646176001654784_n.jpg?_nc_ht=instagram.flhe3-1.fna.fbcdn.net&_nc_ohc=SmNH9bvVA9YAX-RS6QI&oh=35d7846a807075da92e4193652c68e12&oe=5F80D88A",
-      "sizes": "144x144",
-      "type": "image/png"
+      "src": "instagram.ico",
+      "sizes": "256x256",
+      "type": "image/ico"
     },
     {
-      "src": "",
+      "src": "instagram.png",
       "sizes": "192x192",
       "type": "image/png"
     }

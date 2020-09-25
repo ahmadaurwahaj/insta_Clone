@@ -23,7 +23,9 @@ function App(props) {
   const dispatch = useDispatch();
   const { isAuthenticated, isVerifying } = props;
   useEffect(() => {
-    if (isAuthenticated) dispatch(getCurrentUserData("called from app.js"));
+    if (isAuthenticated) {
+      dispatch(getCurrentUserData("called from app.js"));
+    }
   }, [dispatch, isAuthenticated]);
 
   return (

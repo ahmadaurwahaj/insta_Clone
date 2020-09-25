@@ -20,7 +20,7 @@ export default (state = storiesState, action) => {
       };
     case GET_STORIES_SUCCESS:
       return {
-        ...state,
+        dataFailure: false,
         gettingData: false,
         recieveData: true,
         stories: [...state.stories, action.stories],

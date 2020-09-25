@@ -14,7 +14,6 @@ function SignIn({ isAuthenticated, loginError, isLoggingIn }) {
     password: "",
   };
   const [user, setUser] = useState(initState);
-
   const handleChange = e => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };

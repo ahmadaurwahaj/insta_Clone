@@ -14,18 +14,36 @@
   display: flex;
   padding: 22px 16px;
   box-sizing: border-box;
+  overflow-y: scroll;
 }
 
 .singleItem {
   margin-right: 16px;
   list-style-type: none;
-  border: 1px solid black;
-  padding: 10px;
+  border: 0.124rem solid black;
+  border-radius: 100px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.storyLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   border-radius: 100px;
 }
 
-.storyDisplayImg {
+.stoyDisplayImg {
+  width: 95%;
+  height: 95%;
   object-fit: cover;
+  border-radius: 100px;
+  margin-left: 0px;
 }
 
 .storiesWrapper {

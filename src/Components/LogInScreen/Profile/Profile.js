@@ -107,11 +107,13 @@ function Profile({ user, match, selfProfile, docId }) {
       <div className={style.profileWrapper}>
         <div className={style.innerProfileContainer}>
           <div className={style.imageDiv}>
-            <img
-              src={user.personalData.profilePicUrl}
-              className={style.profileImg}
-              alt=""
-            />
+            <Link to={`/stories/${user.personalData.userName}`}>
+              <img
+                src={user.personalData.profilePicUrl}
+                className={style.profileImg}
+                alt=""
+              />
+            </Link>
           </div>
           <div className={style.detailsDiv}>
             <div className={style.nameEdit}>

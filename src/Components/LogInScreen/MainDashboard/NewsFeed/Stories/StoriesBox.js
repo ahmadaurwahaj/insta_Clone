@@ -1,30 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import style from "./Stories.module.css";
-import { useSelector, useDispatch } from "react-redux";
-import { getStoriesData } from "../../../../../Redux/Actions/stories";
+import { useSelector } from "react-redux";
 function StoriesBox() {
-  const userData = useSelector(state => state.auth.userData);
   const storiesData = useSelector(state => state.stories.stories);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (storiesData.length <= 0) dispatch(getStoriesData(userData.following));
-    console.log(storiesData, "storiesData");
-  }, [storiesData.length, dispatch, userData.following, storiesData]);
   return (
     <div className={style.mainWrapper}>
       {storiesData.length > 0 && (
         <ul className={style.innerWrapper}>
-          {console.log(storiesData)}
           {storiesData.map(
             (data, index) => (
               <li key={index} className={style.singleItem}>
-                <Link to={`/stories/${data[0].headerForStories.userName}`}>
+                <Link
+                  to={`/stories/${data[0].headerForStories.userName}`}
+                  className={style.storyLink}
+                >
                   <img
                     alt=""
                     src={data[0].headerForStories.profilePicUrl}
-                    width="40px"
-                    height="40px"
                     className={style.stoyDisplayImg}
                   ></img>
                 </Link>

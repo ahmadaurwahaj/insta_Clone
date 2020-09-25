@@ -1,5 +1,5 @@
 import React from "react";
-import instaLoader from "../../../static/img/instaLoader.gif";
+import instaLoader from "../../../static/img/instaLoader.png";
 import style from "./Loader.module.css";
 function Loader() {
   return (

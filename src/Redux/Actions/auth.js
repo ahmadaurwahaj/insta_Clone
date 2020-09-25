@@ -1,4 +1,4 @@
-import { storiesError } from "./stories";
+import { getStoriesData, storiesError } from "./stories";
 import { myFirebase } from "../../Firebase/firebase";
 import { db } from "../../Firebase/firebase";
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
@@ -123,8 +123,8 @@ export const loginUser = (email, password) => dispatch => {
 };
 
 export const logoutUser = () => dispatch => {
-  dispatch(requestLogout());
   dispatch(storiesError());
+  dispatch(requestLogout());
   myFirebase
     .auth()
     .signOut()
@@ -205,6 +205,7 @@ export const getCurrentUserData = msg => dispatch => {
                 docId: doc.id,
               })
             );
+            dispatch(getStoriesData(doc.data().following));
           }
         });
       });

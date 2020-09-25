@@ -7,30 +7,58 @@ import {
   FaArrowCircleLeft as Left,
   FaArrowCircleRight as Right,
 } from "react-icons/fa";
+import { db } from "../../../../../Firebase/firebase";
+import firebase from "firebase/app";
 const StoriesComp = ({ match, user, history }) => {
   const [storiesObj, setstoriesObj] = useState(null);
   const [indexOfStory, setindexOfStory] = useState(0);
+  const [noStories, setNoStories] = useState(false);
   const storiesData = useSelector(state => state.stories.stories);
+  const [isSelf, setisSelf] = useState(false);
+  const docRef = useSelector(state => state.auth.docRef);
+
   useEffect(() => {
-    const getData = userName => {
-      for (let i = 0; i < storiesData.length; i++) {
-        const singObj = storiesData[i];
-        console.log(storiesData[i], "from stories");
-        if (singObj[0].headerForStories.userName === userName) {
-          setindexOfStory(i);
-          setstoriesObj(singObj);
-          console.log(singObj);
+    if (match.params.userName === user.personalData.userName) {
+      const currentTimeStamp =
+        firebase.firestore.Timestamp.now().toMillis() - 24 * 60 * 60 * 1000;
+      setisSelf(true);
+      db.collection("users")
+        .doc(docRef)
+        .collection("stories")
+        .where("createdAt", ">", currentTimeStamp)
+        .get()
+        .then(res => {
+          let arr = [];
+          res.forEach(data => arr.push(data.data()));
+          if (arr.length > 0) {
+            setstoriesObj(arr);
+          } else {
+            setNoStories(false);
+          }
+          arr = [];
+        });
+    } else {
+      setisSelf(false);
+      const getData = userName => {
+        for (let i = 0; i < storiesData.length; i++) {
+          const singObj = storiesData[i];
+          console.log(storiesData[i], "from stories");
+          if (singObj[0].headerForStories.userName === userName) {
+            setindexOfStory(i);
+            setstoriesObj(singObj);
+          } else {
+            setNoStories(false);
+          }
         }
-      }
-    };
-    getData(match.params.userName);
+      };
+      getData(match.params.userName);
+    }
 
     return () => {
       setindexOfStory(0);
       setstoriesObj(null);
-      console.log("iam triggered");
     };
-  }, [match.params.userName, storiesData]);
+  }, [match.params.userName, storiesData, docRef, user.personalData.userName]);
 
   const handleClose = () => {
     // setcurrentIndex(0);
@@ -56,7 +84,11 @@ const StoriesComp = ({ match, user, history }) => {
 
   const storiesEnd = () => {
     if (indexOfStory + 1 !== storiesData.length) {
-      moveNext();
+      if (!isSelf) {
+        moveNext();
+      } else {
+        history.push("/");
+      }
     } else {
       setstoriesObj(null);
       // setcurrentIndex(0);
@@ -64,47 +96,59 @@ const StoriesComp = ({ match, user, history }) => {
     }
   };
   return (
-    storiesObj !== null && (
-      <div className={style.storiesWrapper}>
-        <div className={style.storiesHeader}>
-          <img
-            alt=""
-            className={style.storyHeaderImg}
-            src={storiesObj[0].headerForStories.profilePicUrl}
-          ></img>
-          <h1>{storiesObj[0].headerForStories.userName}</h1>
-          <button onClick={handleClose} className={style.storiesClose}>
-            <Close />
-          </button>
-        </div>
-        <div className={style.mainStory}>
-          {indexOfStory !== 0 && (
-            <Left className={style.leftArrow} onClick={moveBack} />
-          )}
-          <div className={style.storyDiv}>
-            {console.log(storiesObj)}
-            <Stories
-              stories={storiesObj}
-              defaultInterval={7000}
-              // currentIndex={parseInt(0)}
-              width="100%"
-              height="80vh"
-              onAllStoriesEnd={storiesEnd}
-              onStoryStart={() => {
-                console.log("i am started");
-              }}
-              // currentIndex={parseInt(currentIndex)}
-            />
+    <div className={style.storiesWrapper}>
+      {storiesObj !== null ? (
+        <>
+          <div className={style.storiesHeader}>
+            <img
+              alt=""
+              className={style.storyHeaderImg}
+              src={storiesObj[0].headerForStories.profilePicUrl}
+            ></img>
+            <h1>{storiesObj[0].headerForStories.userName}</h1>
+            <button onClick={handleClose} className={style.storiesClose}>
+              <Close />
+            </button>
           </div>
-          {indexOfStory + 1 !== storiesData.length && (
+          <div className={style.mainStory}>
+            {!isSelf && (
+              <>
+                {indexOfStory !== 0 && (
+                  <Left className={style.leftArrow} onClick={moveBack} />
+                )}
+              </>
+            )}
+            <div className={style.storyDiv}>
+              {console.log(storiesObj)}
+              <Stories
+                stories={storiesObj}
+                defaultInterval={7000}
+                currentIndex={parseInt(0)}
+                width="100%"
+                height="80vh"
+                onAllStoriesEnd={storiesEnd}
+                onStoryStart={() => {
+                  console.log("i am started");
+                }}
+              />
+            </div>
             <>
-              <Right className={style.rightArrow} onClick={moveNext} />
+              {!isSelf && (
+                <>
+                  {indexOfStory + 1 !== storiesData.length && (
+                    <>
+                      <Right className={style.rightArrow} onClick={moveNext} />
+                    </>
+                  )}
+                </>
+              )}
             </>
-          )}
-        </div>
-      </div>
-    )
+          </div>
+        </>
+      ) : (
+        <>{noStories ? <h1>No Stories</h1> : <h1>Loading</h1>}</>
+      )}
+    </div>
   );
 };
-
 export default StoriesComp;

@@ -14,6 +14,7 @@ import { Menu } from "@material-ui/core";
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import { ImImages as ImageIcon } from "react-icons/im";
+import { FaRegWindowClose as Close } from "react-icons/fa";
 import { db, storage } from "../../../Firebase/firebase";
 import firebase from "firebase/app";
 import { useSelector } from "react-redux";
@@ -29,6 +30,8 @@ function NavLinks({ user }) {
   const openProfile = Boolean(anchorProfile);
   const [open, setOpen] = React.useState(false);
   const [storyMediaUrl, setStoryMediaUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [isErrorUploading, setisErrorUploading] = useState("");
   const docRef = useSelector(state => state.auth.docRef);
   const handleImg = e => {
     // setShouldUpdate(true);
@@ -50,6 +53,8 @@ function NavLinks({ user }) {
   const uploadImg = () => {
     if (storyMediaUrl !== "") {
       if (storyMediaUrl.type.includes("image")) {
+        setIsUploading(true);
+        setisErrorUploading("");
         const uuid = `${storyMediaUrl.name}-${crypto
           .randomBytes(16)
           .toString("hex")}`;
@@ -58,8 +63,8 @@ function NavLinks({ user }) {
           "state_changed",
           snapshot => {},
           error => {
-            // setErrorMsg(error);
-            // setIsUpdating(false);
+            setisErrorUploading(error);
+            setIsUploading(false);
           },
           () => {
             storage
@@ -72,6 +77,8 @@ function NavLinks({ user }) {
               });
           }
         );
+      } else {
+        setisErrorUploading("You can upload image only");
       }
     }
   };
@@ -89,7 +96,12 @@ function NavLinks({ user }) {
         viewedBy: [],
         createdAt: firebase.firestore.Timestamp.now().toMillis(),
       })
-      .then(res => handleClose());
+      .then(res => {
+        setIsUploading(false);
+        setisErrorUploading("");
+        handleClose();
+      })
+      .catch(err => setisErrorUploading(err));
   };
   return (
     <ul className={style.listWrapper}>
@@ -109,8 +121,13 @@ function NavLinks({ user }) {
         >
           <div className={style.addStoryModalWrapper}>
             <div className={style.addStoryInnerContainer}>
-              <h1 className={style.storyHeading}>Add Story</h1>
-              <h6>Stories Will disappear after 24 hours</h6>
+              <div className={style.addStoryHeader}>
+                <h1 className={style.storyHeading}>Add Story</h1>
+                <Close className={style.closeIcon} onClick={handleClose} />
+              </div>
+              <h5 className={style.storyAddDesc}>
+                Stories Will disappear after 24 hours
+              </h5>
               <div className={style.imageUploadDiv}>
                 <input
                   type="file"
@@ -126,6 +143,8 @@ function NavLinks({ user }) {
               <button type="" className={style.storyAddBtn} onClick={uploadImg}>
                 Add
               </button>
+              {isUploading && <span>Uploading...</span>}
+              {isErrorUploading !== "" && <h5>{isErrorUploading}</h5>}
             </div>
           </div>
         </Modal>

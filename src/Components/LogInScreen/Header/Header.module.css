@@ -192,11 +192,27 @@
 .imageIcon {
   font-size: 34px;
 }
-
+.addStoryHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.closeIcon {
+  font-size: 20px;
+  cursor: pointer;
+}
 .storyHeading {
   font-weight: 300;
+  float: left;
+  margin-bottom: 6px;
 }
 
+.storyAddDesc {
+  justify-self: flex-start;
+  align-self: flex-start;
+  font-weight: 500;
+}
 .storyAddBtn {
   font-size: 16px;
   background: transparent;
