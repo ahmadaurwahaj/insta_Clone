@@ -32,7 +32,8 @@ $ cd insta_Clone
 3. Enable **Firebase storage, Firebase Firestore** also.
 
 **4. Setup the InstaClone app**
- Once you setup the firebase App. Copy **Firebase config** from firebase app. Go to following file and paste your **config** here.
+ 
+Once you setup the firebase App. Copy **Firebase config** from firebase app. Go to following file and paste your **config** here.
 ```
 +-- src
 |   +-- Firebase
