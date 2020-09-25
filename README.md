@@ -40,6 +40,7 @@ Once you setup the firebase App. Copy **Firebase config** from firebase app. Go 
 	|   +-- firebase.js
 ```
 **5. Run InstaClone App**
+
 After establishing Firebase and InstaClone app Open Terminal and run following command
  ```npm run start```
 
